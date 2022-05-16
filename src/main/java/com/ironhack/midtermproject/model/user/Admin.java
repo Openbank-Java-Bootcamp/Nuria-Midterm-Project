@@ -8,6 +8,5 @@ import lombok.*;
 @PrimaryKeyJoinColumn(name = "id_user")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Admin extends User {
 }

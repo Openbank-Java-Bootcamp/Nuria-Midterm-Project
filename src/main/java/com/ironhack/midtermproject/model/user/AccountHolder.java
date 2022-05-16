@@ -4,7 +4,7 @@ import com.ironhack.midtermproject.utils.Address;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "account_holders")
@@ -14,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class AccountHolder extends User {
     @Column(name = "date_of_birth")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @AttributeOverrides({
             @AttributeOverride(name = "streetAddress", column = @Column(name = "primary_street")),

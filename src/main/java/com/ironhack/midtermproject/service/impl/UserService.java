@@ -27,14 +27,19 @@ public class UserService implements UserServiceInterface, UserDetailsService {
     private RoleRepository roleRepository;
 
     public User saveUser(User user) {
-        log.info("Saving a new user {} inside of the database", user.getName()); // {} Show the info after the comma
+        log.info("Saving a new user {} inside of the database", user.getName());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     public List<User> getUsers() {
-        log.info("Fetching all users"); // Message to show
+        log.info("Fetching all users");
         return userRepository.findAll();
+    }
+
+    public User getUser(String username) {
+        log.info("Fetching the user");
+        return userRepository.findByUsername(username);
     }
 
     @Override

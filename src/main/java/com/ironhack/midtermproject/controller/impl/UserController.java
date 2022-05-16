@@ -15,7 +15,6 @@ public class UserController implements UserControllerInterface {
     @Autowired
     private UserServiceInterface userService;
 
-    // http://localhost:8080/api/users
     @GetMapping("/users")
     @ResponseStatus(HttpStatus.OK)
     public List<User> getUsers() {

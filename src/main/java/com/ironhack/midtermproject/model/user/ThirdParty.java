@@ -11,5 +11,5 @@ import lombok.*;
 @AllArgsConstructor
 public class ThirdParty extends User {
     @Column(name = "hashed_key")
-    private int hashedKey;
+    private String hashedKey;
 }
