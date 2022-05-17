@@ -15,7 +15,6 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Embeddable
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

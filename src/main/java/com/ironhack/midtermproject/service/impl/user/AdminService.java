@@ -28,17 +28,19 @@ public class AdminService implements AdminServiceInterface {
     }
 
     public Admin getAdmin(Long id) {
-        log.info("Fetching a admin account");
+        log.info("Fetching admin account {}", id);
         return adminRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin user not found"));
     }
 
     public void updateAdmin(Long id, Admin admin) {
+        log.info("Updating admin user {}", id);
         Admin adminFromDB = adminRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin user not found"));
         admin.setId(adminFromDB.getId());
         adminRepository.save(admin);
     }
 
     public void deleteAdmin(Long id) {
+        log.info("Deleting admin user {}", id);
         adminRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin user not found"));
         if (adminRepository.findById(id).isPresent()) {
             adminRepository.deleteById(id);

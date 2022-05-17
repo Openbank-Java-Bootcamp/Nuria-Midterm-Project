@@ -28,17 +28,19 @@ public class AccountHolderService implements AccountHolderServiceInterface {
     }
 
     public AccountHolder getAccountHolder(Long id) {
-        log.info("Fetching a account holder account");
+        log.info("Fetching account holder account {}", id);
         return accountHolderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account holder user not found"));
     }
 
     public void updateAccountHolder(Long id, AccountHolder accountHolder) {
+        log.info("Updating account holder user {}", id);
         AccountHolder accountHolderFromDB = accountHolderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account holder user not found"));
         accountHolder.setId(accountHolderFromDB.getId());
         accountHolderRepository.save(accountHolder);
     }
 
     public void deleteAccountHolder(Long id) {
+        log.info("Deleting account holder user {}", id);
         accountHolderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account holder user not found"));
         if (accountHolderRepository.findById(id).isPresent()) {
             accountHolderRepository.deleteById(id);

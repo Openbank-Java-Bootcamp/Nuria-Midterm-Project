@@ -41,9 +41,12 @@ public class Savings extends Account {
 
     private LocalDate interestAddedDate;
 
+    private boolean firstTimeAdded = false;
+
     private static final BigDecimal LIMIT_INTEREST_RATE = new BigDecimal(0.5);
     private static final BigDecimal LIMIT_MINIMUM_BALANCE = new BigDecimal(100);
 
+    // Constructor with primary, secondary owners, and default values
     public Savings(Money balance, User primaryOwner, User secondaryOwner, Long secretKeySavings, LocalDate creationDateSavings) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKeySavings = secretKeySavings;
@@ -53,6 +56,7 @@ public class Savings extends Account {
         this.statusSavings = Status.ACTIVE;
     }
 
+    // Constructor with primary owner and default values
     public Savings(Money balance, User primaryOwner, Long secretKeySavings, LocalDate creationDateSavings) {
         super(balance, primaryOwner);
         this.secretKeySavings = secretKeySavings;
@@ -62,6 +66,7 @@ public class Savings extends Account {
         this.statusSavings = Status.ACTIVE;
     }
 
+    // Constructor with primary and secondary owners
     public Savings(Money balance, User primaryOwner, User secondaryOwner, Long secretKeySavings, Money minimumBalanceSavings, LocalDate creationDateSavings, BigDecimal interestRateSavings) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKeySavings = secretKeySavings;
@@ -71,6 +76,7 @@ public class Savings extends Account {
         this.statusSavings = Status.ACTIVE;
     }
 
+    // Constructor with primary owner
     public Savings(Money balance, User primaryOwner, Long secretKeySavings, Money minimumBalanceSavings, LocalDate creationDateSavings, BigDecimal interestRateSavings) {
         super(balance, primaryOwner);
         this.secretKeySavings = secretKeySavings;
@@ -85,13 +91,22 @@ public class Savings extends Account {
         LocalDate currentDate = LocalDate.now();
         boolean isAdded = false;
 
-        if (Period.between(currentDate, this.getCreationDateSavings()).getYears() >= 1 || Period.between(currentDate, this.getInterestAddedDate()).getYears() >= 1) { // If it has been a year since the account was created or since interest was added, add the interest
-            log.info("It has been a year since the account was created or since the interest was added, the interest will be added automatically");
-            BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateSavings);
-            this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
-            isAdded = true;
-            if (isAdded) {
-                interestAddedDate = LocalDate.now();
+        if (!firstTimeAdded) { // Check if is the first time we add the interest
+            if (Period.between(currentDate, this.getCreationDateSavings()).getYears() >= 1) { // Check if it has been a year since it was created
+                log.info("It has been a month since the account was created, the interest will be added automatically");
+                BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateSavings);
+                this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
+                firstTimeAdded = true;
+            }
+        } else { // If not, check if it has been a year since interest was added
+            if (Period.between(currentDate, this.getInterestAddedDate()).getYears() >= 1) {
+                log.info("It has been a month since the interest was added, the interest will be added automatically");
+                BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateSavings);
+                this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
+                isAdded = true;
+                if (isAdded) { // If we add the interest, save the date to check the next time
+                    interestAddedDate = LocalDate.now();
+                }
             }
         }
 

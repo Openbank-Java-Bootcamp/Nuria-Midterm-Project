@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Slf4j
 public abstract class Account {
     @Id
-    @Column(name = "id")
+    @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
     @AttributeOverrides({
@@ -31,25 +31,11 @@ public abstract class Account {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "primary_owner")
-    @AttributeOverrides({
-            @AttributeOverride(name = "id", column = @Column(name = "primary_user")),
-            @AttributeOverride(name = "name", column = @Column(name = "primary_name")),
-            @AttributeOverride(name = "username", column = @Column(name = "primary_username")),
-            @AttributeOverride(name = "password", column = @Column(name = "primary_password"))
-    })
-    @Embedded
     @NotEmpty(message = "You must have a primary owner")
     private User primaryOwner;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "secondary_owner")
-    @AttributeOverrides({
-            @AttributeOverride(name = "id", column = @Column(name = "secondary_user")),
-            @AttributeOverride(name = "name", column = @Column(name = "secondary_name")),
-            @AttributeOverride(name = "username", column = @Column(name = "secondary_username")),
-            @AttributeOverride(name = "password", column = @Column(name = "secondary_password"))
-    })
-    @Embedded
     private User secondaryOwner;
 
     @Column(name = "penalty_fee")
@@ -60,6 +46,7 @@ public abstract class Account {
     @Embedded
     private Money penaltyFee;
 
+    // Constructor with primary and secondary owners
     public Account(Money balance, User primaryOwner, User secondaryOwner) {
         this.balance = balance;
         this.primaryOwner = primaryOwner;
@@ -67,14 +54,23 @@ public abstract class Account {
         this.penaltyFee = new Money(new BigDecimal(40));
     }
 
+    // Constructor with primary owner
     public Account(Money balance, User primaryOwner) {
         this.balance = balance;
         this.primaryOwner = primaryOwner;
         this.penaltyFee = new Money(new BigDecimal(40));
     }
 
-    public void deductPenaltyFee(){
+    public void deductPenaltyFee(){ // Deduct the penalty when account is below the minimum balance
         log.info("The account is below the minimum balance, the penalty (40) is will be deducted from the balance automatically");
         this.setBalance(new Money(this.getBalance().getAmount().subtract(this.getPenaltyFee().getAmount())));
+    }
+
+    public void increaseBalance(Money amount) { // Increase the balance when transferring money
+        this.balance.increaseAmount(amount);
+    }
+
+    public void decreaseBalance(Money amount) { // Decrease the balance when transferring money
+        this.balance.decreaseAmount(amount);
     }
 }

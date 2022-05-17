@@ -29,17 +29,19 @@ public class CreditCardService implements CreditCardServiceInterface {
     }
 
     public CreditCard getCreditCard(Long id) {
-        log.info("Fetching a credit card account");
+        log.info("Fetching credit card account {}", id);
         return creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account not found"));
     }
 
     public void updateCreditCard(Long id, CreditCard creditCard) {
+        log.info("Updating credit card account {}", id);
         CreditCard creditCardFromDB = creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account not found"));
         creditCard.setAccountId(creditCardFromDB.getAccountId());
         creditCardRepository.save(creditCard);
     }
 
     public void deleteCreditCard(Long id) {
+        log.info("Deleting credit card account {}", id);
         creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account not found"));
         if (creditCardRepository.findById(id).isPresent()) {
             creditCardRepository.deleteById(id);
@@ -47,6 +49,7 @@ public class CreditCardService implements CreditCardServiceInterface {
     }
 
     public void updateBalance(Long id, Money balance) {
+        log.info("Updating balance of credit card account {}", id);
         CreditCard checkingFromDB = creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account is not found"));
         checkingFromDB.setBalance(balance);
         creditCardRepository.save(checkingFromDB);

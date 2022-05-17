@@ -10,8 +10,17 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThirdParty extends User {
+public class ThirdParty {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
     @Column(name = "hashed_key")
     @NotEmpty(message = "You must have a hashed key")
     private String hashedKey;
+
+    public ThirdParty(String name, String hashedKey) {
+        this.name = name;
+        this.hashedKey = String.valueOf(hashedKey.hashCode());
+    }
 }

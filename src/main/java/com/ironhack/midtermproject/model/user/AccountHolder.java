@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Collection;
 
 @Entity
 @Table(name = "account_holders")
@@ -35,6 +34,7 @@ public class AccountHolder extends User {
     @Embedded
     private Address mailingAddress;
 
+    // Account with primary address and mailing address
     public AccountHolder(String name, String username, String password, LocalDate dateOfBirth, Address primaryAddress, Address mailingAddress) {
         super(name, username, password);
         this.dateOfBirth = dateOfBirth;
@@ -42,6 +42,7 @@ public class AccountHolder extends User {
         this.mailingAddress = mailingAddress;
     }
 
+    // Account with primary address
     public AccountHolder(String name, String username, String password, LocalDate dateOfBirth, Address primaryAddress) {
         super(name, username, password);
         this.dateOfBirth = dateOfBirth;

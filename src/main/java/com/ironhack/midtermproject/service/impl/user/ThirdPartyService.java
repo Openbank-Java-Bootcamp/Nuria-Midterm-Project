@@ -28,17 +28,19 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
     }
 
     public ThirdParty getThirdParty(Long id) {
-        log.info("Fetching a third party");
+        log.info("Fetching third party {}", id);
         return thirdPartyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Third party user not found"));
     }
 
     public void updateThirdParty(Long id, ThirdParty thirdParty) {
+        log.info("Updating third party {}", id);
         ThirdParty thirdPartyFromDB = thirdPartyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Third party user not found"));
         thirdParty.setId(thirdPartyFromDB.getId());
         thirdPartyRepository.save(thirdParty);
     }
 
     public void deleteThirdParty(Long id) {
+        log.info("Deleting third party {}", id);
         thirdPartyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Third party user not found"));
         if (thirdPartyRepository.findById(id).isPresent()) {
             thirdPartyRepository.deleteById(id);

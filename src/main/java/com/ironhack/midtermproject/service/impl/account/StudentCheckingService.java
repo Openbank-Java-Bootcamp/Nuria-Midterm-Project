@@ -30,17 +30,19 @@ public class StudentCheckingService implements StudentCheckingServiceInterface {
     }
 
     public StudentChecking getStudentChecking(Long id) {
-        log.info("Fetching a student checking account");
+        log.info("Fetching student checking account {}", id);
         return studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account not found"));
     }
 
     public void updateStudentChecking(Long id, StudentChecking studentChecking) {
+        log.info("Updating student checking account {}", id);
         StudentChecking studentCheckingFromDB = studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account not found"));
         studentChecking.setAccountId(studentCheckingFromDB.getAccountId());
         studentCheckingRepository.save(studentChecking);
     }
 
     public void deleteStudentChecking(Long id) {
+        log.info("Deleting student checking account {}", id);
         studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account not found"));
         if (studentCheckingRepository.findById(id).isPresent()) {
             studentCheckingRepository.deleteById(id);
@@ -48,6 +50,7 @@ public class StudentCheckingService implements StudentCheckingServiceInterface {
     }
 
     public void updateBalance(Long id, Money balance) {
+        log.info("Updating balance of student checking account {}", id);
         StudentChecking studentCheckingFromDB = studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account is not found"));
         studentCheckingFromDB.setBalance(balance);
         studentCheckingRepository.save(studentCheckingFromDB);

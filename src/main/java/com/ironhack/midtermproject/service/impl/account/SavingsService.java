@@ -29,17 +29,19 @@ public class SavingsService implements SavingsServiceInterface {
     }
 
     public Savings getSavings(Long id) {
-        log.info("Fetching a savings account");
+        log.info("Fetching savings account {}", id);
         return savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account not found"));
     }
 
     public void updateSavings(Long id, Savings savings) {
+        log.info("Updating savings account {}", id);
         Savings savingsFromDB = savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account not found"));
         savings.setAccountId(savingsFromDB.getAccountId());
         savingsRepository.save(savings);
     }
 
     public void deleteSavings(Long id) {
+        log.info("Deleting checking account {}", id);
         savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account not found"));
         if (savingsRepository.findById(id).isPresent()) {
             savingsRepository.deleteById(id);
@@ -47,6 +49,7 @@ public class SavingsService implements SavingsServiceInterface {
     }
 
     public void updateBalance(Long id, Money balance) {
+        log.info("Updating balance of savings account {}", id);
         Savings savingsFromDB = savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account is not found"));
         savingsFromDB.setBalance(balance);
         savingsRepository.save(savingsFromDB);

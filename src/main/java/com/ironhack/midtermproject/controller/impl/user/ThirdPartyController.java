@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/third_party")
+@RequestMapping("/api/third")
 public class ThirdPartyController implements ThirdPartiControllerInterface {
     @Autowired
     private ThirdPartyServiceInterface thirdPartyService;

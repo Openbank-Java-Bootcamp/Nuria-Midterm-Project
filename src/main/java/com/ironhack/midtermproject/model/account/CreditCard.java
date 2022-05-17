@@ -3,6 +3,7 @@ package com.ironhack.midtermproject.model.account;
 import com.ironhack.midtermproject.model.user.User;
 import com.ironhack.midtermproject.utils.Money;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,8 @@ public class CreditCard extends Account {
     @Embedded
     @NotEmpty(message = "You must have a credit limit")
     private Money creditLimit;
-    @Column(name = "interest_rate")
+    @Column(name = "interest_rate", precision = 32, scale = 4)
+    //@Digits()
     @NotEmpty(message = "You must have a interest rate")
     private BigDecimal interestRateCredit;
     @Column(name = "creation_date")
@@ -35,10 +37,12 @@ public class CreditCard extends Account {
 
     private LocalDate interestAddedDate;
 
+    private boolean firstTimeAdded = false;
+
     private static final BigDecimal LIMIT_CREDIT = new BigDecimal(100000);
     private static final BigDecimal LIMIT_INTEREST_RATE = new BigDecimal(0.1);
 
-
+    // Constructor with primary, secondary owners, and default values
     public CreditCard(Money balance, User primaryOwner, User secondaryOwner, LocalDate creationDateCredit) {
         super(balance, primaryOwner, secondaryOwner);
         this.creditLimit = new Money(new BigDecimal(100));
@@ -46,6 +50,7 @@ public class CreditCard extends Account {
         this.creationDateCredit = creationDateCredit;
     }
 
+    // Constructor with primary and default values
     public CreditCard(Money balance, User primaryOwner, LocalDate creationDateCredit) {
         super(balance, primaryOwner);
         this.creditLimit = new Money(new BigDecimal(100));
@@ -53,6 +58,7 @@ public class CreditCard extends Account {
         this.creationDateCredit = creationDateCredit;
     }
 
+    // Constructor with primary and secondary owners
     public CreditCard(Money balance, User primaryOwner, User secondaryOwner, Money creditLimit, BigDecimal interestRateCredit, LocalDate creationDateCredit) {
         super(balance, primaryOwner, secondaryOwner);
         setCreditLimit(creditLimit);
@@ -60,6 +66,7 @@ public class CreditCard extends Account {
         this.creationDateCredit = creationDateCredit;
     }
 
+    // Constructor with primary owner
     public CreditCard(Money balance, User primaryOwner, Money creditLimit, BigDecimal interestRateCredit, LocalDate creationDateCredit) {
         super(balance, primaryOwner);
         setCreditLimit(creditLimit);
@@ -72,13 +79,21 @@ public class CreditCard extends Account {
         LocalDate currentDate = LocalDate.now();
         boolean isAdded = false;
 
-        if (Period.between(currentDate, this.getCreationDateCredit()).getMonths() >= 1 || Period.between(currentDate, this.getInterestAddedDate()).getMonths() >= 1) { // If it has been a month since the account was created or since interest was added, add the interest
-            log.info("It has been a month since the account was created or since the interest was added, the interest will be added automatically");
-            BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateCredit);
-            this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
-            isAdded = true;
-            if (isAdded) {
-                interestAddedDate = LocalDate.now();
+        if (!firstTimeAdded) { // Check if is the first time we add the interest
+            if (Period.between(currentDate, this.getCreationDateCredit()).getMonths() >= 1) { // Check if it has been a month since it was created
+                log.info("It has been a month since the account was created, the interest will be added automatically");
+                BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateCredit);
+                this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
+            }
+        } else { // If not, check if it has been a year since interest was added
+            if (Period.between(currentDate, this.getInterestAddedDate()).getMonths() >= 1) {
+                log.info("It has been a month since the interest was added, the interest will be added automatically");
+                BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateCredit);
+                this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
+                isAdded = true;
+                if (isAdded) { // If we add the interest, save the date to check the next time
+                    interestAddedDate = LocalDate.now();
+                }
             }
         }
     }
@@ -86,7 +101,7 @@ public class CreditCard extends Account {
     public void setCreditLimit(Money creditLimit) {
         do {
             try {
-        this.creditLimit = creditLimit;
+                this.creditLimit = creditLimit;
             } catch (Exception e) {
                 System.err.println("The maximum limit credit is " + LIMIT_CREDIT);
             }
@@ -96,7 +111,7 @@ public class CreditCard extends Account {
     public void setInterestRateCredit(BigDecimal interestRateCredit) {
         do {
             try {
-        this.interestRateCredit = interestRateCredit;
+                this.interestRateCredit = interestRateCredit;
             } catch (Exception e) {
                 System.err.println("The minimum interest rate is " + LIMIT_INTEREST_RATE);
             }

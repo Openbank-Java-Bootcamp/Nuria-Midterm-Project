@@ -42,6 +42,7 @@ public class Checking extends Account {
     @Enumerated(EnumType.STRING)
     private Status statusChecking;
 
+    // Constructor with primary, secondary owners and default values
     public Checking(Money balance, User primaryOwner, User secondaryOwner, Long secretKeyChecking, Date creationDateChecking) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKeyChecking = secretKeyChecking;
@@ -51,6 +52,7 @@ public class Checking extends Account {
         this.statusChecking = Status.ACTIVE;
     }
 
+    // Constructor with primary owner and default values
     public Checking(Money balance, User primaryOwner, Long secretKeyChecking, Date creationDateChecking) {
         super(balance, primaryOwner);
         this.secretKeyChecking = secretKeyChecking;

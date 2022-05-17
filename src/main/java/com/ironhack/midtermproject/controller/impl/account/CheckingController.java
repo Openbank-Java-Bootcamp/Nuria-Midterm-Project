@@ -31,10 +31,10 @@ public class CheckingController implements CheckingControllerInterface {
         LocalDate currentDate = LocalDate.now();
         AccountHolder accountHolder = (AccountHolder) checking.getPrimaryOwner();
 
-        if (Period.between(currentDate, accountHolder.getDateOfBirth()).getYears() < 24) {
+        if (Period.between(currentDate, accountHolder.getDateOfBirth()).getYears() < 24) { // If the user is less than 24, create a student checking account
             log.info("The user is less than 24, a student checking account will be created");
             StudentChecking studentChecking;
-            if (checking.getSecondaryOwner() == null) {
+            if (checking.getSecondaryOwner() == null) { // If there is not a secondary owner
                 studentChecking = new StudentChecking(checking.getBalance(), checking.getPrimaryOwner(), checking.getSecretKeyChecking(), checking.getCreationDateChecking());
             } else {
                 studentChecking = new StudentChecking(checking.getBalance(), checking.getPrimaryOwner(), checking.getSecondaryOwner(),checking.getSecretKeyChecking(), checking.getCreationDateChecking());

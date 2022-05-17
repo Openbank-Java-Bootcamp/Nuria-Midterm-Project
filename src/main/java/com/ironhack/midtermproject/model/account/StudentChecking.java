@@ -25,6 +25,7 @@ public class StudentChecking extends Account {
     @Enumerated(EnumType.STRING)
     private Status statusStudent;
 
+    // Constructor with primary and secondary owners
     public StudentChecking(Money balance, User primaryOwner, User secondaryOwner, Long secretKeyStudent, Date creationDateStudent) {
         super(balance, primaryOwner, secondaryOwner);
         this.secretKeyStudent = secretKeyStudent;
@@ -32,6 +33,7 @@ public class StudentChecking extends Account {
         this.statusStudent = Status.ACTIVE;
     }
 
+    // Constructor with primary owner
     public StudentChecking(Money balance, User primaryOwner, Long secretKeyStudent, Date creationDateStudent) {
         super(balance, primaryOwner);
         this.secretKeyStudent = secretKeyStudent;

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/account_holder")
+@RequestMapping("/api/holder")
 public class AccountHolderController implements AccountHolderControllerInterface {
     @Autowired
     private AccountHolderServiceInterface accountHolderService;
