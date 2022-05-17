@@ -4,6 +4,7 @@ import com.ironhack.midtermproject.enums.Status;
 import com.ironhack.midtermproject.model.user.User;
 import com.ironhack.midtermproject.utils.Money;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.Date;
@@ -16,11 +17,11 @@ import java.util.Date;
 @AllArgsConstructor
 public class StudentChecking extends Account {
     @Column(name = "secret_key")
+    @NotEmpty(message = "You must have a secret key")
     private Long secretKeyStudent;
-
     @Column(name = "creation_date")
+    @NotEmpty(message = "You must have a creation date")
     private Date creationDateStudent;
-
     @Enumerated(EnumType.STRING)
     private Status statusStudent;
 

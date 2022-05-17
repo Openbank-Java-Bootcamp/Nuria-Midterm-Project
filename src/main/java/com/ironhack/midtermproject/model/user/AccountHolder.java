@@ -2,9 +2,11 @@ package com.ironhack.midtermproject.model.user;
 
 import com.ironhack.midtermproject.utils.Address;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 @Entity
 @Table(name = "account_holders")
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AccountHolder extends User {
     @Column(name = "date_of_birth")
+    @NotEmpty(message = "You must have a date of birth")
     private LocalDate dateOfBirth;
 
     @AttributeOverrides({
@@ -22,6 +25,7 @@ public class AccountHolder extends User {
             @AttributeOverride(name = "postalCode", column = @Column(name = "primary_postal"))
     })
     @Embedded
+    @NotEmpty(message = "You must have a primary address")
     private Address primaryAddress;
     @AttributeOverrides({
             @AttributeOverride(name = "streetAddress", column = @Column(name = "secondary_street")),
@@ -30,4 +34,17 @@ public class AccountHolder extends User {
     })
     @Embedded
     private Address mailingAddress;
+
+    public AccountHolder(String name, String username, String password, LocalDate dateOfBirth, Address primaryAddress, Address mailingAddress) {
+        super(name, username, password);
+        this.dateOfBirth = dateOfBirth;
+        this.primaryAddress = primaryAddress;
+        this.mailingAddress = mailingAddress;
+    }
+
+    public AccountHolder(String name, String username, String password, LocalDate dateOfBirth, Address primaryAddress) {
+        super(name, username, password);
+        this.dateOfBirth = dateOfBirth;
+        this.primaryAddress = primaryAddress;
+    }
 }

@@ -4,6 +4,7 @@ import com.ironhack.midtermproject.enums.Status;
 import com.ironhack.midtermproject.model.user.User;
 import com.ironhack.midtermproject.utils.Money;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class Checking extends Account {
     @Column(name = "secret_key")
+    @NotEmpty(message = "You must have a secret key")
     private Long secretKeyChecking;
     @Column(name = "minimum_balance")
     @AttributeOverrides({
@@ -24,6 +26,7 @@ public class Checking extends Account {
             @AttributeOverride(name = "amount", column = @Column(name = "minimum_balance_amount"))
     })
     @Embedded
+    @NotEmpty(message = "You must have a minimum balance")
     private Money minimumBalanceChecking;
     @Column(name = "monthly_maintenance_fee")
     @AttributeOverrides({
@@ -31,8 +34,10 @@ public class Checking extends Account {
             @AttributeOverride(name = "amount", column = @Column(name = "maintenance_amount"))
     })
     @Embedded
+    @NotEmpty(message = "You must have a maintenanceFee")
     private Money monthlyMaintenanceFeeChecking;
     @Column(name = "creation_date")
+    @NotEmpty(message = "You must have a creation date")
     private Date creationDateChecking;
     @Enumerated(EnumType.STRING)
     private Status statusChecking;
@@ -57,10 +62,10 @@ public class Checking extends Account {
 
     @Override
     public void setBalance(Money balance) {
-        if (super.getBalance().getAmount().compareTo(minimumBalanceChecking.getAmount()) == -1) {
-            super.deductPenaltyFee();
+        if (this.getBalance().getAmount().compareTo(minimumBalanceChecking.getAmount()) == -1) { // If the account is below th minimum balance
+            this.deductPenaltyFee();
         } else {
-        super.setBalance(balance);
+            this.setBalance(balance);
         }
     }
 }

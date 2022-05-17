@@ -3,7 +3,9 @@ package com.ironhack.midtermproject.model.account;
 import com.ironhack.midtermproject.model.user.User;
 import com.ironhack.midtermproject.utils.Money;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 
@@ -13,6 +15,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public abstract class Account {
     @Id
     @Column(name = "id")
@@ -23,6 +26,7 @@ public abstract class Account {
             @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
     })
     @Embedded
+    @NotEmpty(message = "You must have a balance")
     private Money balance;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -34,6 +38,7 @@ public abstract class Account {
             @AttributeOverride(name = "password", column = @Column(name = "primary_password"))
     })
     @Embedded
+    @NotEmpty(message = "You must have a primary owner")
     private User primaryOwner;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -69,6 +74,7 @@ public abstract class Account {
     }
 
     public void deductPenaltyFee(){
+        log.info("The account is below the minimum balance, the penalty (40) is will be deducted from the balance automatically");
         this.setBalance(new Money(this.getBalance().getAmount().subtract(this.getPenaltyFee().getAmount())));
     }
 }
