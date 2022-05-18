@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
-    @Column(name = "street_address")
     private String streetAddress;
 
     private String city;
 
-    @Column(name = "postal_code")
+    private String country;
+
     private String postalCode;
 }

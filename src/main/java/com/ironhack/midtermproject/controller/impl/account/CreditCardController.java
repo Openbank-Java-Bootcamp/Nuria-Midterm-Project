@@ -1,6 +1,7 @@
 package com.ironhack.midtermproject.controller.impl.account;
 
 import com.ironhack.midtermproject.DTO.BalanceDTO;
+import com.ironhack.midtermproject.DTO.CreditCardDTO;
 import com.ironhack.midtermproject.controller.interfaces.account.CreditCardControllerInterface;
 import com.ironhack.midtermproject.model.account.CreditCard;
 import com.ironhack.midtermproject.service.interfaces.account.CreditCardServiceInterface;
@@ -15,10 +16,10 @@ public class CreditCardController implements CreditCardControllerInterface {
     @Autowired
     private CreditCardServiceInterface creditCardService;
 
-    @PostMapping()
+    @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveCreditCard(@RequestBody(required=false) @Valid CreditCard creditCard) {
-        creditCardService.saveCreditCard(creditCard);
+    public void saveCreditCard(@RequestBody(required=false) @Valid CreditCardDTO creditCardDTO) {
+        creditCardService.saveCreditCard(creditCardDTO);
     }
 
     @GetMapping("/{id}")

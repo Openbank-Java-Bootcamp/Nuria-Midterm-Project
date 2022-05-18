@@ -3,11 +3,12 @@ package com.ironhack.midtermproject.model.account;
 import com.ironhack.midtermproject.model.user.User;
 import com.ironhack.midtermproject.utils.Money;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "account")
@@ -21,20 +22,25 @@ public abstract class Account {
     @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
+    @Column(name = "secret_key")
+    @NotNull(message = "You must have a secret key")
+    private Long secretKey;
+    @Column(name = "creation_date")
+    private LocalDate creationDate;
     @AttributeOverrides({
             @AttributeOverride(name = "currency", column = @Column(name = "balance_currency")),
             @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
     })
     @Embedded
-    @NotEmpty(message = "You must have a balance")
+    @NotNull(message = "You must have a balance")
     private Money balance;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "primary_owner")
-    @NotEmpty(message = "You must have a primary owner")
+    @NotNull(message = "You must have a primary owner")
     private User primaryOwner;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "secondary_owner")
     private User secondaryOwner;
 
@@ -47,7 +53,9 @@ public abstract class Account {
     private Money penaltyFee;
 
     // Constructor with primary and secondary owners
-    public Account(Money balance, User primaryOwner, User secondaryOwner) {
+    public Account(Money balance, User primaryOwner, User secondaryOwner, Long secretKey) {
+        this.secretKey = secretKey;
+        this.creationDate = LocalDate.now();
         this.balance = balance;
         this.primaryOwner = primaryOwner;
         this.secondaryOwner = secondaryOwner;
@@ -55,7 +63,9 @@ public abstract class Account {
     }
 
     // Constructor with primary owner
-    public Account(Money balance, User primaryOwner) {
+    public Account(Money balance, User primaryOwner, Long secretKey) {
+        this.secretKey = secretKey;
+        this.creationDate = LocalDate.now();
         this.balance = balance;
         this.primaryOwner = primaryOwner;
         this.penaltyFee = new Money(new BigDecimal(40));
@@ -66,11 +76,11 @@ public abstract class Account {
         this.setBalance(new Money(this.getBalance().getAmount().subtract(this.getPenaltyFee().getAmount())));
     }
 
-    public void increaseBalance(Money amount) { // Increase the balance when transferring money
+    public void increaseBalance(BigDecimal amount) { // Increase the balance when transferring money
         this.balance.increaseAmount(amount);
     }
 
-    public void decreaseBalance(Money amount) { // Decrease the balance when transferring money
+    public void decreaseBalance(BigDecimal amount) { // Decrease the balance when transferring money
         this.balance.decreaseAmount(amount);
     }
 }

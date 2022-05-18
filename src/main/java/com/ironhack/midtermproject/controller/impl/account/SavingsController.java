@@ -1,6 +1,7 @@
 package com.ironhack.midtermproject.controller.impl.account;
 
 import com.ironhack.midtermproject.DTO.BalanceDTO;
+import com.ironhack.midtermproject.DTO.SavingsDTO;
 import com.ironhack.midtermproject.controller.interfaces.account.SavingsControllerInterface;
 import com.ironhack.midtermproject.model.account.Savings;
 import com.ironhack.midtermproject.service.interfaces.account.SavingsServiceInterface;
@@ -15,10 +16,10 @@ public class SavingsController implements SavingsControllerInterface {
     @Autowired
     private SavingsServiceInterface savingsService;
 
-    @PostMapping()
+    @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveSavings(@RequestBody(required=false) @Valid Savings savings) {
-        savingsService.saveSavings(savings);
+    public void saveSavings(@RequestBody(required=false) @Valid SavingsDTO savingsDTO) {
+        savingsService.saveSavings(savingsDTO);
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,8 @@
 package com.ironhack.midtermproject.service.impl.user;
 
+import com.ironhack.midtermproject.model.account.Account;
 import com.ironhack.midtermproject.model.user.ThirdParty;
+import com.ironhack.midtermproject.repository.account.AccountRepository;
 import com.ironhack.midtermproject.repository.user.ThirdPartyRepository;
 import com.ironhack.midtermproject.service.interfaces.user.ThirdPartyServiceInterface;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -16,6 +19,8 @@ import java.util.Optional;
 public class ThirdPartyService implements ThirdPartyServiceInterface {
     @Autowired
     private ThirdPartyRepository thirdPartyRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
     public ThirdParty saveThirdParty(ThirdParty thirdParty) {
         log.info("Saving a new third party {} inside of the database", thirdParty.getId());
@@ -44,6 +49,22 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
         thirdPartyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Third party user not found"));
         if (thirdPartyRepository.findById(id).isPresent()) {
             thirdPartyRepository.deleteById(id);
+        }
+    }
+
+    public void transferMoney(String hashedKey, BigDecimal amount, Long id, Long secretKey) {
+        log.info("Transferring money, {} will transfer", amount);
+        Optional<ThirdParty> thirdPartyFromDB = Optional.ofNullable(thirdPartyRepository.findByHashedKey(hashedKey).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Third party user not found")));
+        if (thirdPartyFromDB.get().getHashedKey().equals(hashedKey)) { // If the hashed key is the same
+            accountRepository.findByAccountIdAndSecretKey(id, secretKey).get().increaseBalance(amount); // Increase amount in the receiver account
+        }
+    }
+
+    public void receiveMoney(String hashedKey, BigDecimal amount, Long id, Long secretKey) {
+        log.info("Receiving money, {} will be received", amount);
+        Optional<ThirdParty> thirdPartyFromDB = Optional.ofNullable(thirdPartyRepository.findByHashedKey(hashedKey).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Third party user not found")));
+        if (thirdPartyFromDB.get().getHashedKey().equals(hashedKey)) { // If the hashed key is the same
+            accountRepository.findByAccountIdAndSecretKey(id, secretKey).get().decreaseBalance(amount); // Decrease amount in the receiver account
         }
     }
 }

@@ -29,7 +29,6 @@ public class MidtermProjectApplication {
 		return args -> {
 			roleService.saveRole(new Role(null, "ROLE_ADMIN"));
 			roleService.saveRole(new Role(null, "ROLE_HOLDER"));
-			roleService.saveRole(new Role(null, "ROLE_THIRD"));
 
 			userService.saveUser(new Admin(null, "John Doe", "john", "1234", new ArrayList<>()));
 

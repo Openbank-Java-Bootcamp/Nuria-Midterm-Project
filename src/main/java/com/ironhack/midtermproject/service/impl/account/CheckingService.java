@@ -1,8 +1,11 @@
 package com.ironhack.midtermproject.service.impl.account;
 
+import com.ironhack.midtermproject.DTO.CheckingDTO;
 import com.ironhack.midtermproject.model.account.Checking;
+import com.ironhack.midtermproject.model.user.User;
 import com.ironhack.midtermproject.repository.account.AccountRepository;
 import com.ironhack.midtermproject.repository.account.CheckingRepository;
+import com.ironhack.midtermproject.repository.user.UserRepository;
 import com.ironhack.midtermproject.service.interfaces.account.CheckingServiceInterface;
 import com.ironhack.midtermproject.utils.Money;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +24,19 @@ public class CheckingService implements CheckingServiceInterface {
     private CheckingRepository checkingRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public Checking saveChecking(Checking checking) {
+    public Checking saveChecking(CheckingDTO checkingDTO) {
+        Checking checking;
+        if (checkingDTO.getSecondaryOwner() == null) {
+            Optional<User> user = userRepository.findById(checkingDTO.getPrimaryOwner());
+            checking = new Checking(checkingDTO.getBalance(), user.get(), checkingDTO.getSecretKey(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
+        } else {
+            Optional<User> user1 = userRepository.findById(checkingDTO.getPrimaryOwner());
+            Optional<User> user2 = userRepository.findById(checkingDTO.getSecondaryOwner());
+            checking = new Checking(checkingDTO.getBalance(), user1.get(), checkingDTO.getSecretKey(), user2.get(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
+        }
         log.info("Saving a new checking account {} inside of the database", checking.getAccountId());
         if (checking.getAccountId() != null) {
             Optional<Checking> optionalChecking = checkingRepository.findById(checking.getAccountId());
@@ -59,12 +73,16 @@ public class CheckingService implements CheckingServiceInterface {
         checkingRepository.save(checkingFromDB);
     }
 
-    public void transferMoney(String name, Long id, Money transfer) {
-        log.info("Transferring money");
-        Checking checkingReceiver = (Checking) accountRepository.findByNameAndAccountId(name, id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checking account is not found"));
+    public void transferMoney(String username, Long id, BigDecimal transfer) {
+        log.info("Transferring money, {} will transfer", transfer);
+        Checking thisChecking = (Checking) accountRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checking account is not found"));
+        Checking checkingReceiver = (Checking) accountRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checking receiver account is not found"));
 
-        // do while transfer > checkingSed.getBalance
-        //checkingSend.decreaseBalance(transfer);
-        checkingReceiver.increaseBalance(transfer);
+        if (thisChecking.getBalance().getAmount().compareTo(transfer) == -1) { // If the transfer is greater than the account balance
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer should be lower than " + thisChecking.getBalance().getAmount());
+        } else {
+            thisChecking.decreaseBalance(transfer); // Decrease the amount in the user account
+            checkingReceiver.increaseBalance(transfer); // Increase the amount in the receiver account
+        }
     }
 }

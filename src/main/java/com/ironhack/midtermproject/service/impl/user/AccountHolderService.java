@@ -2,6 +2,7 @@ package com.ironhack.midtermproject.service.impl.user;
 
 import com.ironhack.midtermproject.model.user.AccountHolder;
 import com.ironhack.midtermproject.repository.user.AccountHolderRepository;
+import com.ironhack.midtermproject.repository.user.UserRepository;
 import com.ironhack.midtermproject.service.interfaces.user.AccountHolderServiceInterface;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import java.util.Optional;
 public class AccountHolderService implements AccountHolderServiceInterface {
     @Autowired
     private AccountHolderRepository accountHolderRepository;
+    @Autowired
+    private UserService userService;
 
     public AccountHolder saveAccountHolder(AccountHolder accountHolder) {
         log.info("Saving a new account holder account {} inside of the database", accountHolder.getId());
@@ -24,7 +27,7 @@ public class AccountHolderService implements AccountHolderServiceInterface {
             if (optionalAccountHolder.isPresent())
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User with id " + accountHolder.getId() + " already exist");
         }
-        return accountHolderRepository.save(accountHolder);
+        return (AccountHolder) userService.saveUser(accountHolder);
     }
 
     public AccountHolder getAccountHolder(Long id) {
@@ -36,7 +39,7 @@ public class AccountHolderService implements AccountHolderServiceInterface {
         log.info("Updating account holder user {}", id);
         AccountHolder accountHolderFromDB = accountHolderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account holder user not found"));
         accountHolder.setId(accountHolderFromDB.getId());
-        accountHolderRepository.save(accountHolder);
+        userService.saveUser(accountHolder);
     }
 
     public void deleteAccountHolder(Long id) {

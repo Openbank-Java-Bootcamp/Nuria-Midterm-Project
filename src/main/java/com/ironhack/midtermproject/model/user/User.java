@@ -25,6 +25,7 @@ public abstract class User {
     private String username;
     @NotEmpty(message = "You must have a password")
     private String password;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 

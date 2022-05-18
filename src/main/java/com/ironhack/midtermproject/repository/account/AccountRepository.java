@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    @Query(value = "SELECT user.name FROM Account INNER JOIN User ON account.primary_owner = user.id WHERE user.name = :name AND account.account_id = :id", nativeQuery = true)
-    Optional<Account> findByNameAndAccountId(@Param("name") String name, @Param("id") Long id); // Find the account by the user's name and the account id
+    @Query(value = "SELECT user.username FROM Account INNER JOIN User ON account.primary_owner = user.id WHERE user.username = :username", nativeQuery = true)
+    Optional<Account> findByUsername(@Param("username") String username); // Find the account by the username
+    Optional<Account> findByAccountIdAndSecretKey(Long id, Long secretKey);
 }

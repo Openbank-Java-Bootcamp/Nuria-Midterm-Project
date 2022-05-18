@@ -14,7 +14,7 @@ public class AdminController implements AdminControllerInterface {
     @Autowired
     private AdminServiceInterface adminService;
 
-    @PostMapping()
+    @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveAdmin(@RequestBody @Valid Admin admin) {
         adminService.saveAdmin(admin);

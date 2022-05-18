@@ -14,7 +14,7 @@ public class AccountHolderController implements AccountHolderControllerInterface
     @Autowired
     private AccountHolderServiceInterface accountHolderService;
 
-    @PostMapping()
+    @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveAccountHolder(@RequestBody(required=false) @Valid AccountHolder accountHolder) {
         accountHolderService.saveAccountHolder(accountHolder);

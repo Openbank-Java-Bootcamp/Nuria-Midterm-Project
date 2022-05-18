@@ -1,7 +1,7 @@
 package com.ironhack.midtermproject.service.impl.account;
 
-import com.ironhack.midtermproject.model.account.Checking;
 import com.ironhack.midtermproject.model.account.StudentChecking;
+import com.ironhack.midtermproject.repository.account.AccountRepository;
 import com.ironhack.midtermproject.repository.account.StudentCheckingRepository;
 import com.ironhack.midtermproject.service.interfaces.account.StudentCheckingServiceInterface;
 import com.ironhack.midtermproject.utils.Money;
@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,8 @@ import java.util.Optional;
 public class StudentCheckingService implements StudentCheckingServiceInterface {
     @Autowired
     private StudentCheckingRepository studentCheckingRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
     public StudentChecking saveStudentChecking(StudentChecking studentChecking) {
         log.info("Saving a new student checking account {} inside of the database", studentChecking.getAccountId());
@@ -54,5 +57,18 @@ public class StudentCheckingService implements StudentCheckingServiceInterface {
         StudentChecking studentCheckingFromDB = studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account is not found"));
         studentCheckingFromDB.setBalance(balance);
         studentCheckingRepository.save(studentCheckingFromDB);
+    }
+
+    public void transferMoney(String username, Long id, BigDecimal transfer) {
+        log.info("Transferring money, {} will transfer", transfer);
+        StudentChecking thisStudentChecking = (StudentChecking) accountRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account is not found"));
+        StudentChecking checkingReceiver = (StudentChecking) accountRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking receiver account is not found"));
+
+        if (thisStudentChecking.getBalance().getAmount().compareTo(transfer) == -1) { // If the transfer is greater than the account balance
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer should be lower than " + thisStudentChecking.getBalance().getAmount());
+        } else {
+            thisStudentChecking.decreaseBalance(transfer); // Decrease the amount in the user account
+            checkingReceiver.increaseBalance(transfer); // Increase the amount in the receiver account
+        }
     }
 }

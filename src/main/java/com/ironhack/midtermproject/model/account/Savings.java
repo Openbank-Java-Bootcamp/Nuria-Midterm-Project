@@ -4,9 +4,11 @@ import com.ironhack.midtermproject.enums.Status;
 import com.ironhack.midtermproject.model.user.User;
 import com.ironhack.midtermproject.utils.Money;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,21 +22,17 @@ import java.time.Period;
 @AllArgsConstructor
 @Slf4j
 public class Savings extends Account {
-    @Column(name = "secret_key")
-    @NotEmpty(message = "You must have a secret key")
-    private Long secretKeySavings;
     @Column(name = "minimum_balance")
     @AttributeOverrides({
             @AttributeOverride(name = "currency", column = @Column(name = "minimum_balance_currency")),
             @AttributeOverride(name = "amount", column = @Column(name = "minimum_balance_amount"))
     })
     @Embedded
-    @NotEmpty(message = "You must have a minimum balance")
+    @NotNull(message = "You must have a minimum balance")
     private Money minimumBalanceSavings;
-    @Column(name = "creation_date")
-    private LocalDate creationDateSavings;
     @Column(name = "interest_rate")
-    @NotEmpty(message = "You must have a interest rate")
+    @NotNull(message = "You must have a interest rate")
+    @Digits(fraction = 1, integer = 4)
     private BigDecimal interestRateSavings;
     @Enumerated(EnumType.STRING)
     private Status statusSavings;
@@ -47,41 +45,33 @@ public class Savings extends Account {
     private static final BigDecimal LIMIT_MINIMUM_BALANCE = new BigDecimal(100);
 
     // Constructor with primary, secondary owners, and default values
-    public Savings(Money balance, User primaryOwner, User secondaryOwner, Long secretKeySavings, LocalDate creationDateSavings) {
-        super(balance, primaryOwner, secondaryOwner);
-        this.secretKeySavings = secretKeySavings;
+    public Savings(Money balance, User primaryOwner, User secondaryOwner, Long secretKey) {
+        super(balance, primaryOwner, secondaryOwner, secretKey);
         this.minimumBalanceSavings = new Money(new BigDecimal(1000));
-        this.creationDateSavings = creationDateSavings;
         this.interestRateSavings = new BigDecimal(0.0025);
         this.statusSavings = Status.ACTIVE;
     }
 
     // Constructor with primary owner and default values
-    public Savings(Money balance, User primaryOwner, Long secretKeySavings, LocalDate creationDateSavings) {
-        super(balance, primaryOwner);
-        this.secretKeySavings = secretKeySavings;
+    public Savings(Money balance, User primaryOwner, Long secretKey) {
+        super(balance, primaryOwner, secretKey);
         this.minimumBalanceSavings = new Money(new BigDecimal(1000));
-        this.creationDateSavings = creationDateSavings;
         this.interestRateSavings = new BigDecimal(0.0025);
         this.statusSavings = Status.ACTIVE;
     }
 
     // Constructor with primary and secondary owners
-    public Savings(Money balance, User primaryOwner, User secondaryOwner, Long secretKeySavings, Money minimumBalanceSavings, LocalDate creationDateSavings, BigDecimal interestRateSavings) {
-        super(balance, primaryOwner, secondaryOwner);
-        this.secretKeySavings = secretKeySavings;
+    public Savings(Money balance, User primaryOwner, User secondaryOwner, Long secretKey, Money minimumBalanceSavings, BigDecimal interestRateSavings) {
+        super(balance, primaryOwner, secondaryOwner, secretKey);
         setMinimumBalanceSavings(minimumBalanceSavings);
-        this.creationDateSavings = creationDateSavings;
         setInterestRateSavings(interestRateSavings);
         this.statusSavings = Status.ACTIVE;
     }
 
     // Constructor with primary owner
-    public Savings(Money balance, User primaryOwner, Long secretKeySavings, Money minimumBalanceSavings, LocalDate creationDateSavings, BigDecimal interestRateSavings) {
-        super(balance, primaryOwner);
-        this.secretKeySavings = secretKeySavings;
+    public Savings(Money balance, User primaryOwner, Long secretKey, Money minimumBalanceSavings, BigDecimal interestRateSavings) {
+        super(balance, primaryOwner, secretKey);
         setMinimumBalanceSavings(minimumBalanceSavings);
-        this.creationDateSavings = creationDateSavings;
         setInterestRateSavings(interestRateSavings);
         this.statusSavings = Status.ACTIVE;
     }
@@ -92,14 +82,14 @@ public class Savings extends Account {
         boolean isAdded = false;
 
         if (!firstTimeAdded) { // Check if is the first time we add the interest
-            if (Period.between(currentDate, this.getCreationDateSavings()).getYears() >= 1) { // Check if it has been a year since it was created
+            if (Period.between(this.getCreationDate(), currentDate).getYears() >= 1) { // Check if it has been a year since it was created
                 log.info("It has been a month since the account was created, the interest will be added automatically");
                 BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateSavings);
                 this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
                 firstTimeAdded = true;
             }
         } else { // If not, check if it has been a year since interest was added
-            if (Period.between(currentDate, this.getInterestAddedDate()).getYears() >= 1) {
+            if (Period.between(this.getInterestAddedDate(), currentDate).getYears() >= 1) {
                 log.info("It has been a month since the interest was added, the interest will be added automatically");
                 BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateSavings);
                 this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
@@ -118,22 +108,18 @@ public class Savings extends Account {
     }
 
     public void setInterestRateSavings(BigDecimal interestRateSavings) {
-        do {
-            try {
-                this.interestRateSavings = interestRateSavings;
-            } catch (Exception e) {
-                System.err.println("The maximum interest rate is " + LIMIT_INTEREST_RATE);
-            }
-        } while (interestRateSavings.compareTo(LIMIT_INTEREST_RATE) == 1); // While the interest is greater than limit
+        if (interestRateSavings.compareTo(LIMIT_INTEREST_RATE) == 1) { // If the interest is greater than limit
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Interest rate should be less than " + LIMIT_INTEREST_RATE);
+        } else {
+            this.interestRateSavings = interestRateSavings;
+        }
     }
 
     public void setMinimumBalanceSavings(Money minimumBalanceSavings) {
-        do {
-            try {
-                this.minimumBalanceSavings = minimumBalanceSavings;
-            } catch (Exception e) {
-                System.err.println("The minimum limit of minimum balance is " + LIMIT_MINIMUM_BALANCE);
-            }
-        } while (minimumBalanceSavings.getAmount().compareTo(LIMIT_MINIMUM_BALANCE) == -1); // While the minimum balance is less than limit
+        if (minimumBalanceSavings.getAmount().compareTo(LIMIT_MINIMUM_BALANCE) == -1) { // If the minimum balance is less than limit
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Minimum balance should be greater than " + LIMIT_MINIMUM_BALANCE);
+        } else {
+            this.minimumBalanceSavings = minimumBalanceSavings;
+        }
     }
 }

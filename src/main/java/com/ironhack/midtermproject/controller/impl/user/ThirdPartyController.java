@@ -8,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/third")
 public class ThirdPartyController implements ThirdPartiControllerInterface {
     @Autowired
     private ThirdPartyServiceInterface thirdPartyService;
 
-    @PostMapping()
+    @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveThirdParty(@RequestBody(required=false) @Valid ThirdParty thirdParty) {
         thirdPartyService.saveThirdParty(thirdParty);
@@ -36,5 +38,17 @@ public class ThirdPartyController implements ThirdPartiControllerInterface {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteThirdParty(@PathVariable Long id) {
         thirdPartyService.deleteThirdParty(id);
+    }
+
+    @PatchMapping("/{id}/transfer/{hashedKey}/{amount}/{secretKey}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void transferMoney(@PathVariable String hashedKey, @PathVariable BigDecimal amount, @PathVariable Long id, @PathVariable Long secretKey) {
+        thirdPartyService.transferMoney(hashedKey, amount, id, secretKey);
+    }
+
+    @PatchMapping("/receive/{hashedKey}/{id}/{amount}/{secretKey}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void receiveMoney(@PathVariable String hashedKey, @PathVariable BigDecimal amount, @PathVariable Long id, @PathVariable Long secretKey) {
+        thirdPartyService.receiveMoney(hashedKey, amount, id, secretKey);
     }
 }

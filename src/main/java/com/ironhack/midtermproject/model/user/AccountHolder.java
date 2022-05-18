@@ -2,7 +2,7 @@ package com.ironhack.midtermproject.model.user;
 
 import com.ironhack.midtermproject.utils.Address;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,20 +15,22 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AccountHolder extends User {
     @Column(name = "date_of_birth")
-    @NotEmpty(message = "You must have a date of birth")
+    @NotNull(message = "You must have a date of birth")
     private LocalDate dateOfBirth;
 
     @AttributeOverrides({
             @AttributeOverride(name = "streetAddress", column = @Column(name = "primary_street")),
             @AttributeOverride(name = "city", column = @Column(name = "primary_city")),
+            @AttributeOverride(name = "country", column = @Column(name = "primary_country")),
             @AttributeOverride(name = "postalCode", column = @Column(name = "primary_postal"))
     })
     @Embedded
-    @NotEmpty(message = "You must have a primary address")
+    @NotNull(message = "You must have a primary address")
     private Address primaryAddress;
     @AttributeOverrides({
             @AttributeOverride(name = "streetAddress", column = @Column(name = "secondary_street")),
             @AttributeOverride(name = "city", column = @Column(name = "secondary_city")),
+            @AttributeOverride(name = "country", column = @Column(name = "secondary_country")),
             @AttributeOverride(name = "postalCode", column = @Column(name = "secondary_postal"))
     })
     @Embedded

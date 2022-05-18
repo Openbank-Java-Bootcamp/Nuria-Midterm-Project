@@ -15,7 +15,7 @@ public class StudentCheckingController implements StudentCheckingControllerInter
     @Autowired
     private StudentCheckingServiceInterface studentCheckingService;
 
-    @PostMapping()
+    @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveStudentChecking(@RequestBody(required=false) @Valid StudentChecking studentChecking) {
         studentCheckingService.saveStudentChecking(studentChecking);

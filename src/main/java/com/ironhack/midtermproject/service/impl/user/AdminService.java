@@ -16,6 +16,8 @@ import java.util.Optional;
 public class AdminService implements AdminServiceInterface {
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private UserService userService;
 
     public Admin saveAdmin(Admin admin) {
         log.info("Saving a new admin account {} inside of the database", admin.getId());
@@ -24,7 +26,7 @@ public class AdminService implements AdminServiceInterface {
             if (optionalAdmin.isPresent())
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User with id " + admin.getId() + " already exist");
         }
-        return adminRepository.save(admin);
+        return (Admin) userService.saveUser(admin);
     }
 
     public Admin getAdmin(Long id) {
@@ -36,7 +38,7 @@ public class AdminService implements AdminServiceInterface {
         log.info("Updating admin user {}", id);
         Admin adminFromDB = adminRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin user not found"));
         admin.setId(adminFromDB.getId());
-        adminRepository.save(admin);
+        userService.saveUser(admin);
     }
 
     public void deleteAdmin(Long id) {
