@@ -56,7 +56,17 @@ public class CreditCardService implements CreditCardServiceInterface {
 
     public Money getCreditCardBalance(Long id, String username) {
         log.info("Fetching checking account balance {}", id);
-        creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account not found"));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String thisUsername;
+        if (principal instanceof UserDetails) {
+            thisUsername = ((UserDetails) principal).getUsername();
+        } else {
+            thisUsername = principal.toString();
+        }
+
+        if (thisUsername.equals(username)) {
+            creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account not found"));
+        }
         return accountRepository.findByIdAndUsername(id, username);
     }
 
@@ -85,11 +95,21 @@ public class CreditCardService implements CreditCardServiceInterface {
         }
     }
 
-    public void updateBalance(Long id, Money balance) {
+    public void updateBalance(String username, Long id, Money balance) {
         log.info("Updating balance of credit card account {}", id);
-        CreditCard checkingFromDB = creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account is not found"));
-        checkingFromDB.setBalance(balance);
-        creditCardRepository.save(checkingFromDB);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String thisUsername;
+        if (principal instanceof UserDetails) {
+            thisUsername = ((UserDetails) principal).getUsername();
+        } else {
+            thisUsername = principal.toString();
+        }
+
+        if (thisUsername.equals(username)) {
+            CreditCard checkingFromDB = creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account is not found"));
+            checkingFromDB.setBalance(balance);
+            creditCardRepository.save(checkingFromDB);
+        }
     }
 
     public void transferMoney(String username, Long id, BigDecimal transfer) {
@@ -104,7 +124,6 @@ public class CreditCardService implements CreditCardServiceInterface {
         }
 
         if (thisUsername.equals(username)) {
-
             Long idSend = accountRepository.findByUsername(username);
             CreditCard thisCreditCard = (CreditCard) accountRepository.findById(idSend).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit Card account is not found"));
             Account creditCardReceiver = accountRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit Card receiver account is not found"));

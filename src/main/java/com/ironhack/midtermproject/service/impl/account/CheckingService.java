@@ -57,7 +57,17 @@ public class CheckingService implements CheckingServiceInterface {
 
     public Money getCheckingBalance(Long id, String username) {
         log.info("Fetching checking account balance {}", id);
-        checkingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checking account not found"));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String thisUsername;
+        if (principal instanceof UserDetails) {
+            thisUsername = ((UserDetails) principal).getUsername();
+        } else {
+            thisUsername = principal.toString();
+        }
+
+        if (thisUsername.equals(username)) {
+            checkingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checking account not found"));
+        }
         return accountRepository.findByIdAndUsername(id, username);
     }
 
@@ -85,11 +95,21 @@ public class CheckingService implements CheckingServiceInterface {
         }
     }
 
-    public void updateBalance(Long id, Money balance) {
+    public void updateBalance(String username, Long id, Money balance) {
         log.info("Updating balance of account {}", id);
-        Checking checkingFromDB = checkingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checking account is not found"));
-        checkingFromDB.setBalance(balance);
-        checkingRepository.save(checkingFromDB);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String thisUsername;
+        if (principal instanceof UserDetails) {
+            thisUsername = ((UserDetails) principal).getUsername();
+        } else {
+            thisUsername = principal.toString();
+        }
+
+        if (thisUsername.equals(username)) {
+            Checking checkingFromDB = checkingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checking account is not found"));
+            checkingFromDB.setBalance(balance);
+            checkingRepository.save(checkingFromDB);
+        }
     }
 
     public void transferMoney(String username, Long id, BigDecimal transfer) {

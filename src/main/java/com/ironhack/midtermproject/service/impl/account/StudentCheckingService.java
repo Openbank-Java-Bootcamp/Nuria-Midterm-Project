@@ -48,7 +48,17 @@ public class StudentCheckingService implements StudentCheckingServiceInterface {
 
     public Money getStudentBalance(Long id, String username) {
         log.info("Fetching checking account balance {}", id);
-        studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account not found"));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String thisUsername;
+        if (principal instanceof UserDetails) {
+            thisUsername = ((UserDetails) principal).getUsername();
+        } else {
+            thisUsername = principal.toString();
+        }
+
+        if (thisUsername.equals(username)) {
+            studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account not found"));
+        }
         return accountRepository.findByIdAndUsername(id, username);
     }
 
@@ -76,11 +86,21 @@ public class StudentCheckingService implements StudentCheckingServiceInterface {
         }
     }
 
-    public void updateBalance(Long id, Money balance) {
+    public void updateBalance(String username, Long id, Money balance) {
         log.info("Updating balance of student checking account {}", id);
-        StudentChecking studentCheckingFromDB = studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account is not found"));
-        studentCheckingFromDB.setBalance(balance);
-        studentCheckingRepository.save(studentCheckingFromDB);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String thisUsername;
+        if (principal instanceof UserDetails) {
+            thisUsername = ((UserDetails) principal).getUsername();
+        } else {
+            thisUsername = principal.toString();
+        }
+
+        if (thisUsername.equals(username)) {
+            StudentChecking studentCheckingFromDB = studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account is not found"));
+            studentCheckingFromDB.setBalance(balance);
+            studentCheckingRepository.save(studentCheckingFromDB);
+        }
     }
 
     public void transferMoney(String username, Long id, BigDecimal transfer) {

@@ -13,7 +13,7 @@ public interface CheckingControllerInterface {
     Money getCheckingBalance(Long id, String username);
     void updateChecking(Long id, CheckingDTO checkingDTO);
     void deleteChecking(Long id);
-    void updateBalance(Long id, BalanceDTO balanceDTO);
+    void updateBalance(String username, Long id, BalanceDTO balanceDTO);
 
     void transferMoney(String username, Long id, BigDecimal transfer);
 }

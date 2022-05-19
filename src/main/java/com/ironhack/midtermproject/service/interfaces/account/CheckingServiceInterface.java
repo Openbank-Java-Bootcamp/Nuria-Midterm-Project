@@ -14,6 +14,6 @@ public interface CheckingServiceInterface {
     Money getCheckingBalance(Long id, String username);
     void updateChecking(Long id, CheckingDTO checkingDTO);
     void deleteChecking(Long id);
-    void updateBalance(Long id, Money balance);
+    void updateBalance(String username, Long id, Money balance);
     void transferMoney(String name, Long id, BigDecimal transfer);
 }

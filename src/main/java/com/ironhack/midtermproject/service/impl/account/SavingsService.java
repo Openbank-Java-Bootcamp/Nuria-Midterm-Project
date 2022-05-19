@@ -56,7 +56,17 @@ public class SavingsService implements SavingsServiceInterface {
 
     public Money getSavingsBalance(Long id, String username) {
         log.info("Fetching checking account balance {}", id);
-        savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account not found"));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String thisUsername;
+        if (principal instanceof UserDetails) {
+            thisUsername = ((UserDetails) principal).getUsername();
+        } else {
+            thisUsername = principal.toString();
+        }
+
+        if (thisUsername.equals(username)) {
+            savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account not found"));
+        }
         return accountRepository.findByIdAndUsername(id, username);
     }
 
@@ -85,11 +95,21 @@ public class SavingsService implements SavingsServiceInterface {
         }
     }
 
-    public void updateBalance(Long id, Money balance) {
+    public void updateBalance(String username, Long id, Money balance) {
         log.info("Updating balance of savings account {}", id);
-        Savings savingsFromDB = savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account is not found"));
-        savingsFromDB.setBalance(balance);
-        savingsRepository.save(savingsFromDB);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String thisUsername;
+        if (principal instanceof UserDetails) {
+            thisUsername = ((UserDetails) principal).getUsername();
+        } else {
+            thisUsername = principal.toString();
+        }
+
+        if (thisUsername.equals(username)) {
+            Savings savingsFromDB = savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account is not found"));
+            savingsFromDB.setBalance(balance);
+            savingsRepository.save(savingsFromDB);
+        }
     }
 
     public void transferMoney(String username, Long id, BigDecimal transfer) {

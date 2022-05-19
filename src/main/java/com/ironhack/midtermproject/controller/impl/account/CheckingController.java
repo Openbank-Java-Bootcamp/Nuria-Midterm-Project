@@ -79,10 +79,10 @@ public class CheckingController implements CheckingControllerInterface {
         checkingService.deleteChecking(id);
     }
 
-    @PatchMapping("/{id}/balance")
+    @PatchMapping("/{username}/{id}/balance")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBalance(@PathVariable Long id, @RequestBody @Valid BalanceDTO balanceDTO) {
-        checkingService.updateBalance(id, balanceDTO.getBalance());
+    public void updateBalance(@PathVariable String username, @PathVariable Long id, @RequestBody @Valid BalanceDTO balanceDTO) {
+        checkingService.updateBalance(username, id, balanceDTO.getBalance());
     }
 
     @PatchMapping("/transfer/{username}/{id}/{transfer}")

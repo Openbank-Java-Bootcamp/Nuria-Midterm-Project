@@ -12,6 +12,6 @@ public interface SavingsServiceInterface {
     Money getSavingsBalance(Long id, String username);
     void updateSavings(Long id, SavingsDTO savingsDTO);
     void deleteSavings(Long id);
-    void updateBalance(Long id, Money balance);
+    void updateBalance(String username, Long id, Money balance);
     void transferMoney(String name, Long id, BigDecimal transfer);
 }

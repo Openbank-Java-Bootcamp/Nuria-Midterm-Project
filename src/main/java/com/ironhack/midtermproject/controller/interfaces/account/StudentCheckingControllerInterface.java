@@ -13,6 +13,6 @@ public interface StudentCheckingControllerInterface {
     Money getStudentBalance(Long id, String username);
     void updateStudentChecking(Long id, StudentCheckingDTO studentCheckingDTO);
     void deleteStudentChecking(Long id);
-    void updateBalance(Long id, BalanceDTO balanceDTO);
+    void updateBalance(String username, Long id, BalanceDTO balanceDTO);
     void transferMoney(String username, Long id, BigDecimal transfer);
 }

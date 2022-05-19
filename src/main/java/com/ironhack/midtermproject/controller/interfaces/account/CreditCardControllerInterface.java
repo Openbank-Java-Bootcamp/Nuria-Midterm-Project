@@ -14,6 +14,6 @@ public interface CreditCardControllerInterface {
     Money getCreditBalance(Long id, String username);
     void updateCreditCard(Long id, CreditCardDTO creditCardDTO);
     void deleteCreditCard(Long id);
-    void updateBalance(Long id, BalanceDTO balanceDTO);
+    void updateBalance(String username, Long id, BalanceDTO balanceDTO);
     void transferMoney(String username, Long id, BigDecimal transfer);
 }

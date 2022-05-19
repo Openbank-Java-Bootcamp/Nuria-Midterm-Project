@@ -13,6 +13,6 @@ public interface SavingsControllerInterface {
     Money getSavingsBalance(Long id, String username);
     void updateSavings(Long id, SavingsDTO savingsDTO);
     void deleteSavings(Long id);
-    void updateBalance(Long id, BalanceDTO balanceDTO);
+    void updateBalance(String username, Long id, BalanceDTO balanceDTO);
     void transferMoney(String username, Long id, BigDecimal transfer);
 }

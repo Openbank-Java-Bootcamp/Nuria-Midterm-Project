@@ -1,11 +1,13 @@
 package com.ironhack.midtermproject.controller.interfaces.user;
 
+import com.ironhack.midtermproject.DTO.ThirdPartyDTO;
 import com.ironhack.midtermproject.model.user.ThirdParty;
 
 import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
 
 public interface ThirdPartiControllerInterface {
-    void saveThirdParty(ThirdParty thirdParty);
+    void saveThirdParty(ThirdPartyDTO thirdPartyDTO);
     ThirdParty getThirdParty(Long id);
     void updateThirdParty(Long id, ThirdParty thirdParty);
     void deleteThirdParty(Long id);

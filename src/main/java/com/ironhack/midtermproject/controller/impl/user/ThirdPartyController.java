@@ -1,5 +1,6 @@
 package com.ironhack.midtermproject.controller.impl.user;
 
+import com.ironhack.midtermproject.DTO.ThirdPartyDTO;
 import com.ironhack.midtermproject.controller.interfaces.user.ThirdPartiControllerInterface;
 import com.ironhack.midtermproject.model.user.ThirdParty;
 import com.ironhack.midtermproject.service.interfaces.user.ThirdPartyServiceInterface;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequestMapping("/api/third")
@@ -18,8 +20,8 @@ public class ThirdPartyController implements ThirdPartiControllerInterface {
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveThirdParty(@RequestBody(required=false) @Valid ThirdParty thirdParty) {
-        thirdPartyService.saveThirdParty(thirdParty);
+    public void saveThirdParty(@RequestBody ThirdPartyDTO thirdPartyDTO){
+        thirdPartyService.saveThirdParty(thirdPartyDTO);
     }
 
     @GetMapping("/{id}")
@@ -40,7 +42,7 @@ public class ThirdPartyController implements ThirdPartiControllerInterface {
         thirdPartyService.deleteThirdParty(id);
     }
 
-    @PatchMapping("/{id}/transfer/{hashedKey}/{amount}/{secretKey}")
+    @PatchMapping("/transfer/{hashedKey}/{id}/{amount}/{secretKey}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void transferMoney(@PathVariable String hashedKey, @PathVariable BigDecimal amount, @PathVariable Long id, @PathVariable Long secretKey) {
         thirdPartyService.transferMoney(hashedKey, amount, id, secretKey);
