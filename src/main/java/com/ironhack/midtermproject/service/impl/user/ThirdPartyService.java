@@ -23,7 +23,7 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
     private AccountRepository accountRepository;
 
     public ThirdParty saveThirdParty(ThirdParty thirdParty) {
-        log.info("Saving a new third party {} inside of the database", thirdParty.getId());
+        log.info("Saving a new third party inside of the database");
         if (thirdParty.getId() != null) {
             Optional<ThirdParty> optionalThirdParty = thirdPartyRepository.findById(thirdParty.getId());
             if (optionalThirdParty.isPresent())

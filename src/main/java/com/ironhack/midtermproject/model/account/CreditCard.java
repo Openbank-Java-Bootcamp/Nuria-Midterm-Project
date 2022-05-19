@@ -35,8 +35,9 @@ public class CreditCard extends Account {
     private BigDecimal interestRateCredit;
 
     private LocalDate interestAddedDate;
+    //private LocalDate interestAddedDate = LocalDate.of(2022, 03, 12);
 
-    private boolean firstTimeAdded = false;
+    private boolean firstTimeAdded = true;
 
     private static final BigDecimal LIMIT_CREDIT = new BigDecimal(100000);
     private static final BigDecimal LIMIT_INTEREST_RATE = new BigDecimal(0.1);
@@ -73,18 +74,33 @@ public class CreditCard extends Account {
     public void setBalance(Money balance) {
         LocalDate currentDate = LocalDate.now();
         boolean isAdded = false;
+        super.updateBalance(balance.getAmount());
 
-        if (!firstTimeAdded) { // Check if is the first time we add the interest
-            if (Period.between(this.getCreationDate(), currentDate).getMonths() >= 1) { // Check if it has been a month since it was created
+        if (firstTimeAdded) { // Check if is the first time we add the interest
+            if (Period.between(this.getCreationDate(), currentDate).getYears() >= 1) { // If the created month is the same as the current month, even if was created 2 years ago it doesn't add
                 log.info("It has been a month since the account was created, the interest will be added automatically");
                 BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateCredit);
-                this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
+                super.increaseBalance(multiply);
+                firstTimeAdded = false;
+            } else if (Period.between(this.getCreationDate(), currentDate).getMonths() >= 1) {
+                log.info("It has been a month since the account was created, the interest will be added automatically");
+                BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateCredit);
+                super.increaseBalance(multiply);
+                firstTimeAdded = false;
             }
         } else { // If not, check if it has been a year since interest was added
-            if (Period.between(this.getInterestAddedDate(), currentDate).getMonths() >= 1) {
+            if (Period.between(this.getInterestAddedDate(), currentDate).getYears() >= 1) {
                 log.info("It has been a month since the interest was added, the interest will be added automatically");
                 BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateCredit);
-                this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
+                super.increaseBalance(multiply);
+                isAdded = true;
+                if (isAdded) { // If we add the interest, save the date to check the next time
+                    interestAddedDate = LocalDate.now();
+                }
+            } else if (Period.between(this.getInterestAddedDate(), currentDate).getMonths() >= 1) {
+                log.info("It has been a month since the interest was added, the interest will be added automatically");
+                BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateCredit);
+                super.increaseBalance(multiply);
                 isAdded = true;
                 if (isAdded) { // If we add the interest, save the date to check the next time
                     interestAddedDate = LocalDate.now();

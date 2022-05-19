@@ -38,8 +38,9 @@ public class Savings extends Account {
     private Status statusSavings;
 
     private LocalDate interestAddedDate;
+    //private LocalDate interestAddedDate = LocalDate.of(2012, 05, 12);
 
-    private boolean firstTimeAdded = false;
+    private boolean firstTimeAdded = true;
 
     private static final BigDecimal LIMIT_INTEREST_RATE = new BigDecimal(0.5);
     private static final BigDecimal LIMIT_MINIMUM_BALANCE = new BigDecimal(100);
@@ -80,30 +81,28 @@ public class Savings extends Account {
     public void setBalance(Money balance) {
         LocalDate currentDate = LocalDate.now();
         boolean isAdded = false;
+        super.updateBalance(balance.getAmount());
 
-        if (!firstTimeAdded) { // Check if is the first time we add the interest
+        if (this.getBalance().getAmount().compareTo(minimumBalanceSavings.getAmount()) == -1) { // If the account is below th minimum balance
+            super.deductPenaltyFee();
+        }
+        if (firstTimeAdded) { // Check if is the first time we add the interest
             if (Period.between(this.getCreationDate(), currentDate).getYears() >= 1) { // Check if it has been a year since it was created
-                log.info("It has been a month since the account was created, the interest will be added automatically");
+                log.info("It has been a year since the account was created, the interest will be added automatically");
                 BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateSavings);
-                this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
-                firstTimeAdded = true;
+                super.increaseBalance(multiply);
+                firstTimeAdded = false;
             }
         } else { // If not, check if it has been a year since interest was added
             if (Period.between(this.getInterestAddedDate(), currentDate).getYears() >= 1) {
-                log.info("It has been a month since the interest was added, the interest will be added automatically");
+                log.info("It has been a year since the interest was added, the interest will be added automatically");
                 BigDecimal multiply = this.getBalance().getAmount().multiply(interestRateSavings);
-                this.setBalance(new Money(this.getBalance().getAmount().add(multiply)));
+                super.increaseBalance(multiply);
                 isAdded = true;
                 if (isAdded) { // If we add the interest, save the date to check the next time
                     interestAddedDate = LocalDate.now();
                 }
             }
-        }
-
-        if (this.getBalance().getAmount().compareTo(minimumBalanceSavings.getAmount()) == -1) { // If the account is below th minimum balance
-            this.deductPenaltyFee();
-        } else {
-            this.setBalance(balance);
         }
     }
 

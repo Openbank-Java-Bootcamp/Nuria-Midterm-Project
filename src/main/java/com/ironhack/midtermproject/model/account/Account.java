@@ -66,6 +66,7 @@ public abstract class Account {
     public Account(Money balance, User primaryOwner, Long secretKey) {
         this.secretKey = secretKey;
         this.creationDate = LocalDate.now();
+        //this.creationDate = LocalDate.of(2022, 03, 12);
         this.balance = balance;
         this.primaryOwner = primaryOwner;
         this.penaltyFee = new Money(new BigDecimal(40));
@@ -73,14 +74,18 @@ public abstract class Account {
 
     public void deductPenaltyFee(){ // Deduct the penalty when account is below the minimum balance
         log.info("The account is below the minimum balance, the penalty (40) is will be deducted from the balance automatically");
-        this.setBalance(new Money(this.getBalance().getAmount().subtract(this.getPenaltyFee().getAmount())));
+        this.balance.setAmount(this.balance.decreaseAmount(this.getPenaltyFee().getAmount()));
     }
 
     public void increaseBalance(BigDecimal amount) { // Increase the balance when transferring money
-        this.balance.increaseAmount(amount);
+        this.balance.setAmount(this.balance.increaseAmount(amount));
     }
 
     public void decreaseBalance(BigDecimal amount) { // Decrease the balance when transferring money
-        this.balance.decreaseAmount(amount);
+        this.balance.setAmount(this.balance.decreaseAmount(amount));
+    }
+
+    public void updateBalance(BigDecimal balance) {
+        this.balance.setAmount(balance);
     }
 }

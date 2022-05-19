@@ -10,6 +10,7 @@ import com.ironhack.midtermproject.model.user.User;
 import com.ironhack.midtermproject.repository.user.UserRepository;
 import com.ironhack.midtermproject.service.interfaces.account.CheckingServiceInterface;
 import com.ironhack.midtermproject.service.interfaces.account.StudentCheckingServiceInterface;
+import com.ironhack.midtermproject.utils.Money;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +61,16 @@ public class CheckingController implements CheckingControllerInterface {
         return checkingService.getChecking(id);
     }
 
+    @GetMapping("/{id}/balance/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public Money getCheckingBalance(@PathVariable Long id, @PathVariable String username) {
+        return checkingService.getCheckingBalance(id, username);
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateChecking(@PathVariable Long id, @RequestBody(required = false) @Valid Checking checking) {
-        checkingService.updateChecking(id, checking);
+    public void updateChecking(@PathVariable Long id, @RequestBody(required = false) @Valid CheckingDTO checkingDTO) {
+        checkingService.updateChecking(id, checkingDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -78,7 +85,7 @@ public class CheckingController implements CheckingControllerInterface {
         checkingService.updateBalance(id, balanceDTO.getBalance());
     }
 
-    @PatchMapping("/transfer/{id}/{username}/{transfer}")
+    @PatchMapping("/transfer/{username}/{id}/{transfer}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void transferMoney(@PathVariable String username, @PathVariable Long id, @PathVariable BigDecimal transfer) {
         checkingService.transferMoney(username, id, transfer);

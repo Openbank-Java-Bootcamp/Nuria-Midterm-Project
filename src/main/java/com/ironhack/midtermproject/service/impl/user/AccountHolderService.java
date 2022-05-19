@@ -21,7 +21,7 @@ public class AccountHolderService implements AccountHolderServiceInterface {
     private UserService userService;
 
     public AccountHolder saveAccountHolder(AccountHolder accountHolder) {
-        log.info("Saving a new account holder account {} inside of the database", accountHolder.getId());
+        log.info("Saving a new account holder account inside of the database");
         if (accountHolder.getId() != null) {
             Optional<AccountHolder> optionalAccountHolder = accountHolderRepository.findById(accountHolder.getId());
             if (optionalAccountHolder.isPresent())

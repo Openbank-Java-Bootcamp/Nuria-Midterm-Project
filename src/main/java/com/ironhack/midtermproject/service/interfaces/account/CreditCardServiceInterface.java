@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 public interface CreditCardServiceInterface {
     CreditCard saveCreditCard(CreditCardDTO creditCardDTO);
     CreditCard getCreditCard(Long id);
-    void updateCreditCard(Long id, CreditCard creditCard);
+    Money getCreditCardBalance(Long id, String username);
+    void updateCreditCard(Long id, CreditCardDTO creditCardDTO);
     void deleteCreditCard(Long id);
     void updateBalance(Long id, Money balance);
     void transferMoney(String name, Long id, BigDecimal transfer);

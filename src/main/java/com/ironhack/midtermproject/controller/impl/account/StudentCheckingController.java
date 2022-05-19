@@ -1,13 +1,17 @@
 package com.ironhack.midtermproject.controller.impl.account;
 
 import com.ironhack.midtermproject.DTO.BalanceDTO;
+import com.ironhack.midtermproject.DTO.StudentCheckingDTO;
 import com.ironhack.midtermproject.controller.interfaces.account.StudentCheckingControllerInterface;
 import com.ironhack.midtermproject.model.account.StudentChecking;
 import com.ironhack.midtermproject.service.interfaces.account.StudentCheckingServiceInterface;
+import com.ironhack.midtermproject.utils.Money;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/student")
@@ -27,10 +31,16 @@ public class StudentCheckingController implements StudentCheckingControllerInter
         return studentCheckingService.getStudentChecking(id);
     }
 
+    @GetMapping("/{id}/balance/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public Money getStudentBalance(@PathVariable Long id, @PathVariable String username) {
+        return studentCheckingService.getStudentBalance(id, username);
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateStudentChecking(@PathVariable Long id, @RequestBody(required=false) @Valid StudentChecking studentChecking) {
-        studentCheckingService.updateStudentChecking(id, studentChecking);
+    public void updateStudentChecking(@PathVariable Long id, @RequestBody(required=false) @Valid StudentCheckingDTO studentCheckingDTO) {
+        studentCheckingService.updateStudentChecking(id, studentCheckingDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -43,5 +53,11 @@ public class StudentCheckingController implements StudentCheckingControllerInter
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBalance(@PathVariable Long id, @RequestBody @Valid BalanceDTO balanceDTO) {
         studentCheckingService.updateBalance(id, balanceDTO.getBalance());
+    }
+
+    @PatchMapping("/transfer/{username}/{id}/{transfer}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void transferMoney(@PathVariable String username, @PathVariable Long id, @PathVariable BigDecimal transfer) {
+        studentCheckingService.transferMoney(username, id, transfer);
     }
 }

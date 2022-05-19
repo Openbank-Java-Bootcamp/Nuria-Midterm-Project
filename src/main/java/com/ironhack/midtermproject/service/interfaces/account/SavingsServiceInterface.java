@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 public interface SavingsServiceInterface {
     Savings saveSavings(SavingsDTO savingsDTO);
     Savings getSavings(Long id);
-    void updateSavings(Long id, Savings savings);
+    Money getSavingsBalance(Long id, String username);
+    void updateSavings(Long id, SavingsDTO savingsDTO);
     void deleteSavings(Long id);
     void updateBalance(Long id, Money balance);
     void transferMoney(String name, Long id, BigDecimal transfer);

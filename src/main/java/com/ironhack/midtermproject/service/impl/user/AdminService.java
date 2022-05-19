@@ -20,7 +20,7 @@ public class AdminService implements AdminServiceInterface {
     private UserService userService;
 
     public Admin saveAdmin(Admin admin) {
-        log.info("Saving a new admin account {} inside of the database", admin.getId());
+        log.info("Saving a new admin account inside of the database");
         if (admin.getId() != null) {
             Optional<Admin> optionalAdmin = adminRepository.findById(admin.getId());
             if (optionalAdmin.isPresent())

@@ -38,11 +38,6 @@ public class UserService implements UserServiceInterface, UserDetailsService {
         return userRepository.findAll();
     }
 
-    public User getUser(String username) {
-        log.info("Fetching the user");
-        return userRepository.findByUsername(username);
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);

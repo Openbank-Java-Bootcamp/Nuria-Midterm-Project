@@ -53,7 +53,7 @@ public class Checking extends Account {
     }
 
     // Constructor with primary and secondary owners
-    public Checking(Money balance, User primaryOwner, Long secretKey, User secondaryOwner, Money minimumBalanceChecking, Money monthlyMaintenanceFeeChecking) {
+    public Checking(Money balance, User primaryOwner, User secondaryOwner, Long secretKey, Money minimumBalanceChecking, Money monthlyMaintenanceFeeChecking) {
         super(balance, primaryOwner, secondaryOwner, secretKey);
         this.minimumBalanceChecking = minimumBalanceChecking;
         this.monthlyMaintenanceFeeChecking = monthlyMaintenanceFeeChecking;
@@ -70,10 +70,9 @@ public class Checking extends Account {
 
     @Override
     public void setBalance(Money balance) {
-        if (this.getBalance().getAmount().compareTo(minimumBalanceChecking.getAmount()) == -1) { // If the account is below th minimum balance
-            this.deductPenaltyFee();
-        } else {
-            this.setBalance(balance);
+        super.setBalance(balance);
+        if (this.getBalance().getAmount().compareTo(this.minimumBalanceChecking.getAmount()) == -1) { // If the account is below th minimum balance
+            super.deductPenaltyFee();
         }
     }
 }
