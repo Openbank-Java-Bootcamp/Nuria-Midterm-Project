@@ -20,14 +20,14 @@ This project was created with Java, Spring Boot and Spring Data JPA to include t
 ## Models
 This API has ten models, five for the accounts and five for the users:
 
-Account
+### Account
 * Account (Abstract)
 * Checking (extends account)
 * Credit Card (extends account)
 * Savings (extends account)
 * Student checking
 
-User
+### User
 * User (abstract)
 * Account holder (extends user)
 * Admin (extends user)
