@@ -34,11 +34,11 @@ public class SavingsService implements SavingsServiceInterface {
         Savings savings;
         if (savingsDTO.getSecondaryOwner() == null) {
             Optional<User> user = userRepository.findById(savingsDTO.getPrimaryOwner());
-            savings = new Savings(savingsDTO.getBalance(), user.get(), savingsDTO.getSecretKey(), savingsDTO.getMinimumBalanceSavings(), savingsDTO.getInterestRateSavings());
+            savings = new Savings(savingsDTO.getSecretKey(), savingsDTO.getBalance(), user.get(), savingsDTO.getMinimumBalanceSavings(), savingsDTO.getInterestRateSavings());
         } else {
             Optional<User> user1 = userRepository.findById(savingsDTO.getPrimaryOwner());
             Optional<User> user2 = userRepository.findById(savingsDTO.getSecondaryOwner());
-            savings = new Savings(savingsDTO.getBalance(), user1.get(), user2.get(), savingsDTO.getSecretKey(), savingsDTO.getMinimumBalanceSavings(), savingsDTO.getInterestRateSavings());
+            savings = new Savings(savingsDTO.getSecretKey(), savingsDTO.getBalance(), user1.get(), user2.get(), savingsDTO.getMinimumBalanceSavings(), savingsDTO.getInterestRateSavings());
         }
         log.info("Saving a new savings account inside of the database");
         if (savings.getAccountId() != null) {
@@ -75,11 +75,11 @@ public class SavingsService implements SavingsServiceInterface {
         Savings savings;
         if (savingsDTO.getSecondaryOwner() == null) {
             Optional<User> user = userRepository.findById(savingsDTO.getPrimaryOwner());
-            savings = new Savings(savingsDTO.getBalance(), user.get(), savingsDTO.getSecretKey(), savingsDTO.getMinimumBalanceSavings(), savingsDTO.getInterestRateSavings());
+            savings = new Savings(savingsDTO.getSecretKey(), savingsDTO.getBalance(), user.get(), savingsDTO.getMinimumBalanceSavings(), savingsDTO.getInterestRateSavings());
         } else {
             Optional<User> user1 = userRepository.findById(savingsDTO.getPrimaryOwner());
             Optional<User> user2 = userRepository.findById(savingsDTO.getSecondaryOwner());
-            savings = new Savings(savingsDTO.getBalance(), user1.get(), user2.get(), savingsDTO.getSecretKey(), savingsDTO.getMinimumBalanceSavings(), savingsDTO.getInterestRateSavings());
+            savings = new Savings(savingsDTO.getSecretKey(), savingsDTO.getBalance(), user1.get(), user2.get(), savingsDTO.getMinimumBalanceSavings(), savingsDTO.getInterestRateSavings());
         }
 
         Savings savingsFromDB = savingsRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Savings account not found"));

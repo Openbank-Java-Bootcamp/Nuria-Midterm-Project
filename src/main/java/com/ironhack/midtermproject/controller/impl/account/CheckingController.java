@@ -44,10 +44,10 @@ public class CheckingController implements CheckingControllerInterface {
         if (Period.between(accountHolder.getDateOfBirth(), currentDate).getYears() < 24) { // If the user is less than 24, create a student checking account
             log.info("The user is less than 24, a student checking account will be created");
             if (checkingDTO.getSecondaryOwner() == null) { // If there is not a secondary owner
-                studentChecking = new StudentChecking(checkingDTO.getBalance(), user.get(), checkingDTO.getSecretKey());
+                studentChecking = new StudentChecking(checkingDTO.getSecretKey(), checkingDTO.getBalance(), user.get());
             } else {
                 Optional<User> user2 = userRepository.findById(checkingDTO.getSecondaryOwner());
-                studentChecking = new StudentChecking(checkingDTO.getBalance(), user.get(), user2.get(), checkingDTO.getSecretKey());
+                studentChecking = new StudentChecking(checkingDTO.getSecretKey(), checkingDTO.getBalance(), user.get(), user2.get());
             }
             studentCheckingService.saveStudentChecking(studentChecking);
         } else {

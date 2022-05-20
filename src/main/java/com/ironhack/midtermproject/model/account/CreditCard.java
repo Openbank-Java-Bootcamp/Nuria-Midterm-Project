@@ -30,12 +30,12 @@ public class CreditCard extends Account {
     @NotNull(message = "You must have a credit limit")
     private Money creditLimit;
     @Column(name = "interest_rate", precision = 32, scale = 4)
-    @Digits(fraction = 1, integer = 4)
+    @Digits(integer = 1, fraction = 1)
     @NotNull(message = "You must have a interest rate")
     private BigDecimal interestRateCredit;
 
     private LocalDate interestAddedDate;
-    //private LocalDate interestAddedDate = LocalDate.of(2022, 03, 12);
+    //private LocalDate interestAddedDate = LocalDate.of(2020, 03, 12);
 
     private boolean firstTimeAdded = true;
 
@@ -43,29 +43,29 @@ public class CreditCard extends Account {
     private static final BigDecimal LIMIT_INTEREST_RATE = new BigDecimal(0.1);
 
     // Constructor with primary, secondary owners, and default values
-    public CreditCard(Money balance, User primaryOwner, User secondaryOwner, Long secretKey) {
-        super(balance, primaryOwner, secondaryOwner, secretKey);
+    public CreditCard(Long secretKey, Money balance, User primaryOwner, User secondaryOwner) {
+        super(secretKey, balance, primaryOwner, secondaryOwner);
         this.creditLimit = new Money(new BigDecimal(100));
         this.interestRateCredit = new BigDecimal(0.2);
     }
 
     // Constructor with primary and default values
-    public CreditCard(Money balance, User primaryOwner, Long secretKey) {
-        super(balance, primaryOwner, secretKey);
+    public CreditCard(Long secretKey, Money balance, User primaryOwner) {
+        super(secretKey, balance, primaryOwner);
         this.creditLimit = new Money(new BigDecimal(100));
         this.interestRateCredit = new BigDecimal(0.2);
     }
 
     // Constructor with primary and secondary owners
-    public CreditCard(Money balance, User primaryOwner, User secondaryOwner, Long secretKey, Money creditLimit, BigDecimal interestRateCredit) {
-        super(balance, primaryOwner, secondaryOwner, secretKey);
+    public CreditCard(Long secretKey, Money balance, User primaryOwner, User secondaryOwner, Money creditLimit, BigDecimal interestRateCredit) {
+        super(secretKey, balance, primaryOwner, secondaryOwner);
         setCreditLimit(creditLimit);
         setInterestRateCredit(interestRateCredit);
     }
 
     // Constructor with primary owner
-    public CreditCard(Money balance, User primaryOwner, Long secretKey, Money creditLimit, BigDecimal interestRateCredit) {
-        super(balance, primaryOwner, secretKey);
+    public CreditCard(Long secretKey, Money balance, User primaryOwner, Money creditLimit, BigDecimal interestRateCredit) {
+        super(secretKey, balance, primaryOwner);
         setCreditLimit(creditLimit);
         setInterestRateCredit(interestRateCredit);
     }

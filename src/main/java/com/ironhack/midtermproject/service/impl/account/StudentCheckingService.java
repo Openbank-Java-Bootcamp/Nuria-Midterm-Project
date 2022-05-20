@@ -67,11 +67,11 @@ public class StudentCheckingService implements StudentCheckingServiceInterface {
         StudentChecking studentChecking;
         if (studentCheckingDTO.getSecondaryOwner() == null) {
             Optional<User> user = userRepository.findById(studentCheckingDTO.getPrimaryOwner());
-            studentChecking = new StudentChecking(studentCheckingDTO.getBalance(), user.get(), studentCheckingDTO.getSecretKey());
+            studentChecking = new StudentChecking(studentCheckingDTO.getSecretKey(), studentCheckingDTO.getBalance(), user.get());
         } else {
             Optional<User> user1 = userRepository.findById(studentCheckingDTO.getPrimaryOwner());
             Optional<User> user2 = userRepository.findById(studentCheckingDTO.getSecondaryOwner());
-            studentChecking = new StudentChecking(studentCheckingDTO.getBalance(), user1.get(), user2.get(), studentCheckingDTO.getSecretKey());
+            studentChecking = new StudentChecking(studentCheckingDTO.getSecretKey(), studentCheckingDTO.getBalance(), user1.get(), user2.get());
         }
         StudentChecking studentCheckingFromDB = studentCheckingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student checking account not found"));
         studentChecking.setAccountId(studentCheckingFromDB.getAccountId());

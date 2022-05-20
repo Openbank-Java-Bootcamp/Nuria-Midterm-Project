@@ -26,13 +26,14 @@ public class MidtermProjectApplication {
 
 	@Bean
 	CommandLineRunner run(UserService userService, RoleService roleService) {
-		return args -> {
-			roleService.saveRole(new Role(null, "ROLE_ADMIN"));
-			roleService.saveRole(new Role(null, "ROLE_HOLDER"));
+		/*return args -> {
+			roleService.saveRole(new Role(null, "ADMIN"));
+			roleService.saveRole(new Role(null, "HOLDER"));
 
 			userService.saveUser(new Admin(null, "John Doe", "john", "1234", new ArrayList<>()));
 
-			roleService.addRoleToUser("john", "ROLE_ADMIN");
-		};
+			roleService.addRoleToUser("john", "ADMIN");
+		};*/
+		return null;
 	}
 }

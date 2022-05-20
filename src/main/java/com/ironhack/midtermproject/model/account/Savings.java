@@ -32,7 +32,7 @@ public class Savings extends Account {
     private Money minimumBalanceSavings;
     @Column(name = "interest_rate")
     @NotNull(message = "You must have a interest rate")
-    @Digits(fraction = 1, integer = 4)
+    @Digits(integer = 1, fraction = 1)
     private BigDecimal interestRateSavings;
     @Enumerated(EnumType.STRING)
     private Status statusSavings;
@@ -45,33 +45,51 @@ public class Savings extends Account {
     private static final BigDecimal LIMIT_INTEREST_RATE = new BigDecimal(0.5);
     private static final BigDecimal LIMIT_MINIMUM_BALANCE = new BigDecimal(100);
 
+    // Constructor for testing first time adding interest
+    public Savings(Long secretKey, LocalDate creationDate, Money balance, User primaryOwner, Money minimumBalanceSavings, BigDecimal interestRateSavings) {
+        super(secretKey, creationDate, balance, primaryOwner);
+        this.minimumBalanceSavings = minimumBalanceSavings;
+        this.interestRateSavings = interestRateSavings;
+        this.statusSavings = Status.ACTIVE;
+    }
+
+    // Constructor for testing interest rate
+    public Savings(Long secretKey, Money balance, User primaryOwner, Money minimumBalanceSavings, BigDecimal interestRateSavings, LocalDate interestAddedDat) {
+        super(secretKey, balance, primaryOwner);
+        this.minimumBalanceSavings = minimumBalanceSavings;
+        this.interestRateSavings = interestRateSavings;
+        this.statusSavings = Status.ACTIVE;
+        this.interestAddedDate = interestAddedDat;
+        this.firstTimeAdded = false;
+    }
+
     // Constructor with primary, secondary owners, and default values
-    public Savings(Money balance, User primaryOwner, User secondaryOwner, Long secretKey) {
-        super(balance, primaryOwner, secondaryOwner, secretKey);
+    public Savings(Long secretKey, Money balance, User primaryOwner, User secondaryOwner) {
+        super(secretKey, balance, primaryOwner, secondaryOwner);
         this.minimumBalanceSavings = new Money(new BigDecimal(1000));
         this.interestRateSavings = new BigDecimal(0.0025);
         this.statusSavings = Status.ACTIVE;
     }
 
     // Constructor with primary owner and default values
-    public Savings(Money balance, User primaryOwner, Long secretKey) {
-        super(balance, primaryOwner, secretKey);
+    public Savings(Long secretKey, Money balance, User primaryOwner) {
+        super(secretKey, balance, primaryOwner);
         this.minimumBalanceSavings = new Money(new BigDecimal(1000));
         this.interestRateSavings = new BigDecimal(0.0025);
         this.statusSavings = Status.ACTIVE;
     }
 
     // Constructor with primary and secondary owners
-    public Savings(Money balance, User primaryOwner, User secondaryOwner, Long secretKey, Money minimumBalanceSavings, BigDecimal interestRateSavings) {
-        super(balance, primaryOwner, secondaryOwner, secretKey);
+    public Savings(Long secretKey, Money balance, User primaryOwner, User secondaryOwner, Money minimumBalanceSavings, BigDecimal interestRateSavings) {
+        super(secretKey, balance, primaryOwner, secondaryOwner);
         setMinimumBalanceSavings(minimumBalanceSavings);
         setInterestRateSavings(interestRateSavings);
         this.statusSavings = Status.ACTIVE;
     }
 
     // Constructor with primary owner
-    public Savings(Money balance, User primaryOwner, Long secretKey, Money minimumBalanceSavings, BigDecimal interestRateSavings) {
-        super(balance, primaryOwner, secretKey);
+    public Savings(Long secretKey, Money balance, User primaryOwner, Money minimumBalanceSavings, BigDecimal interestRateSavings) {
+        super(secretKey, balance, primaryOwner);
         setMinimumBalanceSavings(minimumBalanceSavings);
         setInterestRateSavings(interestRateSavings);
         this.statusSavings = Status.ACTIVE;

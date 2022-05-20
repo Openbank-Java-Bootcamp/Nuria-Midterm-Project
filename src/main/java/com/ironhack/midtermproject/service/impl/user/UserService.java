@@ -7,10 +7,12 @@ import com.ironhack.midtermproject.service.interfaces.user.UserServiceInterface;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -29,6 +31,12 @@ public class UserService implements UserServiceInterface, UserDetailsService {
 
     public User saveUser(User user) {
         log.info("Saving a new user {} inside of the database", user.getName());
+        if (user.getId() != null) {
+            Optional<User> optionalUser = userRepository.findById(user.getId());
+            if (optionalUser.isPresent()) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "User with id " + user.getId() + " already exist");
+            }
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

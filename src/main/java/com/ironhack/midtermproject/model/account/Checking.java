@@ -8,7 +8,6 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "checking")
@@ -37,32 +36,32 @@ public class Checking extends Account {
     private Status statusChecking;
 
     // Constructor with primary, secondary owners and default values
-    public Checking(Money balance, User primaryOwner, User secondaryOwner, Long secretKey) {
-        super(balance, primaryOwner, secondaryOwner, secretKey);
+    public Checking(Long secretKey, Money balance, User primaryOwner, User secondaryOwner) {
+        super(secretKey, balance, primaryOwner, secondaryOwner);
         this.minimumBalanceChecking = new Money(new BigDecimal(250));
         this.monthlyMaintenanceFeeChecking = new Money(new BigDecimal(12));
         this.statusChecking = Status.ACTIVE;
     }
 
     // Constructor with primary owner and default values
-    public Checking(Money balance, User primaryOwner, Long secretKey) {
-        super(balance, primaryOwner, secretKey);
+    public Checking(Long secretKey, Money balance, User primaryOwner) {
+        super(secretKey, balance, primaryOwner);
         this.minimumBalanceChecking = new Money(new BigDecimal(250));
         this.monthlyMaintenanceFeeChecking = new Money(new BigDecimal(12));
         this.statusChecking = Status.ACTIVE;
     }
 
     // Constructor with primary and secondary owners
-    public Checking(Money balance, User primaryOwner, User secondaryOwner, Long secretKey, Money minimumBalanceChecking, Money monthlyMaintenanceFeeChecking) {
-        super(balance, primaryOwner, secondaryOwner, secretKey);
+    public Checking(Long secretKey, Money balance, User primaryOwner, User secondaryOwner, Money minimumBalanceChecking, Money monthlyMaintenanceFeeChecking) {
+        super(secretKey, balance, primaryOwner, secondaryOwner);
         this.minimumBalanceChecking = minimumBalanceChecking;
         this.monthlyMaintenanceFeeChecking = monthlyMaintenanceFeeChecking;
         this.statusChecking = Status.ACTIVE;
     }
 
     // Constructor with primary owner
-    public Checking(Money balance, User primaryOwner, Long secretKey, Money minimumBalanceChecking, Money monthlyMaintenanceFeeChecking) {
-        super(balance, primaryOwner, secretKey);
+    public Checking(Long secretKey, Money balance, User primaryOwner, Money minimumBalanceChecking, Money monthlyMaintenanceFeeChecking) {
+        super(secretKey, balance, primaryOwner);
         this.minimumBalanceChecking = minimumBalanceChecking;
         this.monthlyMaintenanceFeeChecking = monthlyMaintenanceFeeChecking;
         this.statusChecking = Status.ACTIVE;

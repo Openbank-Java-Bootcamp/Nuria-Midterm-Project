@@ -52,8 +52,17 @@ public abstract class Account {
     @Embedded
     private Money penaltyFee;
 
+    // Constructor for testing
+    public Account(Long secretKey, LocalDate creationDate, Money balance, User primaryOwner) {
+        this.secretKey = secretKey;
+        this.creationDate = creationDate;
+        this.balance = balance;
+        this.primaryOwner = primaryOwner;
+        this.penaltyFee = new Money(new BigDecimal(40));
+    }
+
     // Constructor with primary and secondary owners
-    public Account(Money balance, User primaryOwner, User secondaryOwner, Long secretKey) {
+    public Account(Long secretKey, Money balance, User primaryOwner, User secondaryOwner) {
         this.secretKey = secretKey;
         this.creationDate = LocalDate.now();
         this.balance = balance;
@@ -63,10 +72,10 @@ public abstract class Account {
     }
 
     // Constructor with primary owner
-    public Account(Money balance, User primaryOwner, Long secretKey) {
+    public Account(Long secretKey, Money balance, User primaryOwner) {
         this.secretKey = secretKey;
         this.creationDate = LocalDate.now();
-        //this.creationDate = LocalDate.of(2022, 03, 12);
+        //this.creationDate = LocalDate.of(2020, 03, 12);
         this.balance = balance;
         this.primaryOwner = primaryOwner;
         this.penaltyFee = new Money(new BigDecimal(40));

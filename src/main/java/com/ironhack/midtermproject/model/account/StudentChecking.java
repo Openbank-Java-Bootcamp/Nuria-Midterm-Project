@@ -20,14 +20,14 @@ public class StudentChecking extends Account {
     private Status statusStudent;
 
     // Constructor with primary and secondary owners
-    public StudentChecking(Money balance, User primaryOwner, User secondaryOwner, Long secretKey) {
-        super(balance, primaryOwner, secondaryOwner, secretKey);
+    public StudentChecking(Long secretKey, Money balance, User primaryOwner, User secondaryOwner) {
+        super(secretKey, balance, primaryOwner, secondaryOwner);
         this.statusStudent = Status.ACTIVE;
     }
 
     // Constructor with primary owner
-    public StudentChecking(Money balance, User primaryOwner, Long secretKey) {
-        super(balance, primaryOwner, secretKey);
+    public StudentChecking(Long secretKey, Money balance, User primaryOwner) {
+        super(secretKey, balance, primaryOwner);
         this.statusStudent = Status.ACTIVE;
     }
 }

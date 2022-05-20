@@ -34,11 +34,11 @@ public class CreditCardService implements CreditCardServiceInterface {
         CreditCard creditCard;
         if (creditCardDTO.getSecondaryOwner() == null) {
             Optional<User> user = userRepository.findById(creditCardDTO.getPrimaryOwner());
-            creditCard = new CreditCard(creditCardDTO.getBalance(), user.get(), creditCardDTO.getSecretKey(), creditCardDTO.getCreditLimit(), creditCardDTO.getInterestRateCredit());
+            creditCard = new CreditCard(creditCardDTO.getSecretKey(), creditCardDTO.getBalance(), user.get(), creditCardDTO.getCreditLimit(), creditCardDTO.getInterestRateCredit());
         } else {
             Optional<User> user1 = userRepository.findById(creditCardDTO.getPrimaryOwner());
             Optional<User> user2 = userRepository.findById(creditCardDTO.getSecondaryOwner());
-            creditCard = new CreditCard(creditCardDTO.getBalance(), user1.get(), user2.get(), creditCardDTO.getSecretKey(), creditCardDTO.getCreditLimit(), creditCardDTO.getInterestRateCredit());
+            creditCard = new CreditCard(creditCardDTO.getSecretKey(), creditCardDTO.getBalance(), user1.get(), user2.get(), creditCardDTO.getCreditLimit(), creditCardDTO.getInterestRateCredit());
         }
         log.info("Saving a new credit card account inside of the database");
         if (creditCard.getAccountId() != null) {
@@ -75,11 +75,11 @@ public class CreditCardService implements CreditCardServiceInterface {
         CreditCard creditCard;
         if (creditCardDTO.getSecondaryOwner() == null) {
             Optional<User> user = userRepository.findById(creditCardDTO.getPrimaryOwner());
-            creditCard = new CreditCard(creditCardDTO.getBalance(), user.get(), creditCardDTO.getSecretKey(), creditCardDTO.getCreditLimit(), creditCardDTO.getInterestRateCredit());
+            creditCard = new CreditCard(creditCardDTO.getSecretKey(), creditCardDTO.getBalance(), user.get(), creditCardDTO.getCreditLimit(), creditCardDTO.getInterestRateCredit());
         } else {
             Optional<User> user1 = userRepository.findById(creditCardDTO.getPrimaryOwner());
             Optional<User> user2 = userRepository.findById(creditCardDTO.getSecondaryOwner());
-            creditCard = new CreditCard(creditCardDTO.getBalance(), user1.get(), user2.get(), creditCardDTO.getSecretKey(), creditCardDTO.getCreditLimit(), creditCardDTO.getInterestRateCredit());
+            creditCard = new CreditCard(creditCardDTO.getSecretKey(), creditCardDTO.getBalance(), user1.get(), user2.get(), creditCardDTO.getCreditLimit(), creditCardDTO.getInterestRateCredit());
         }
 
         CreditCard creditCardFromDB = creditCardRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Credit card account not found"));

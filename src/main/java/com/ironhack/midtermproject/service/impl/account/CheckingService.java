@@ -35,11 +35,11 @@ public class CheckingService implements CheckingServiceInterface {
         Checking checking;
         if (checkingDTO.getSecondaryOwner() == null) {
             Optional<User> user = userRepository.findById(checkingDTO.getPrimaryOwner());
-            checking = new Checking(checkingDTO.getBalance(), user.get(), checkingDTO.getSecretKey(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
+            checking = new Checking(checkingDTO.getSecretKey(), checkingDTO.getBalance(), user.get(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
         } else {
             Optional<User> user1 = userRepository.findById(checkingDTO.getPrimaryOwner());
             Optional<User> user2 = userRepository.findById(checkingDTO.getSecondaryOwner());
-            checking = new Checking(checkingDTO.getBalance(), user1.get(), user2.get(), checkingDTO.getSecretKey(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
+            checking = new Checking(checkingDTO.getSecretKey(), checkingDTO.getBalance(), user1.get(), user2.get(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
         }
         if (checking.getAccountId() != null) {
             Optional<Checking> optionalChecking = checkingRepository.findById(checking.getAccountId());
@@ -76,11 +76,11 @@ public class CheckingService implements CheckingServiceInterface {
         Checking checking;
         if (checkingDTO.getSecondaryOwner() == null) {
             Optional<User> user = userRepository.findById(checkingDTO.getPrimaryOwner());
-            checking = new Checking(checkingDTO.getBalance(), user.get(), checkingDTO.getSecretKey(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
+            checking = new Checking(checkingDTO.getSecretKey(), checkingDTO.getBalance(), user.get(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
         } else {
             Optional<User> user1 = userRepository.findById(checkingDTO.getPrimaryOwner());
             Optional<User> user2 = userRepository.findById(checkingDTO.getSecondaryOwner());
-            checking = new Checking(checkingDTO.getBalance(), user1.get(), user2.get(), checkingDTO.getSecretKey(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
+            checking = new Checking(checkingDTO.getSecretKey(), checkingDTO.getBalance(), user1.get(), user2.get(), checkingDTO.getMinimumBalanceChecking(), checkingDTO.getMonthlyMaintenanceFeeChecking());
         }
         Checking checkingFromDB = checkingRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Checking account not found"));
         checking.setAccountId(checkingFromDB.getAccountId());
