@@ -14,6 +14,7 @@ To execute this functionalities it is necesary to know the routes that will be s
 
 This project was created with Java, Spring Boot and Spring Data JPA to include the SQL queries. The API was tested with Postman and with JUnit.
 
+### DB Model
 ![Database](./images/db.png)
 
 ## Models
@@ -35,6 +36,7 @@ User
 
 For every model it was created the respective repository, service interface, service, controller interface and controller. And for some of the classes a DTO was created to make it easier for the user to create new accounts or users.
 
+### Class Diagram
 ![Class diagram](./images/class_diagram.jpg)
 
 ## Server routes table
@@ -42,7 +44,7 @@ Log in - http://localhost:8080/api/login
 
 For the GET and PUT routes it is necessary to have a body.
 
-**Admin Role**
+### Admin Role
 | Model                    | Save (POST)                                                  | Add Role (POST)                           | Get (GET)                               | Update (PUT)                            | Delete (DELETE)                         | Receive money (PATCH)                                                                        | Transfer money (PATCH)                                                                    |
 |--------------------------|--------------------------------------------------------------|-------------------------------------------|-----------------------------------------|-----------------------------------------|-----------------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | Account Holder           | http://localhost:8080/api/holder/save                        | http://localhost:8080/api/roles/addtouser | http://localhost:8080/api/holder/{id}   | http://localhost:8080/api/holder/{id}   | http://localhost:8080/api/holder/{id}   |                                                                                              |                                                                                           |
@@ -53,7 +55,7 @@ For the GET and PUT routes it is necessary to have a body.
 | Savings Account          | http://localhost:8080/api/savings/save                       |                                           | http://localhost:8080/api/savings/{id}  | http://localhost:8080/api/savings/{id}  | http://localhost:8080/api/savings/{id}  |                                                                                              |                                                                                           |
 | Student Checking Account | http://localhost:8080/api/holder/save (user is less than 24) |                                           | http://localhost:8080/api/student/{id}  | http://localhost:8080/api/student/{id}  | http://localhost:8080/api/student/{id}  |                                                                                              |                                                                                           |
 
-**Account Holder Role**
+### Account Holder Role
 | Model                    | Get Balance (GET)                                          | Update Balance (PATCH)                                 | Transfer money (PATCH)                                                          |
 |--------------------------|------------------------------------------------------------|--------------------------------------------------------|---------------------------------------------------------------------------------|
 | Checking Account         | http://localhost:8080/api/checking/{id}/balance/{username} | http://localhost:8080/api/checking/{user}/{id}/balance | http://localhost:8080/api/checking/transfer/{user}/{idAccountReceiver}/{amount} |
