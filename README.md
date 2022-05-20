@@ -38,8 +38,30 @@ For every model it was created the respective repository, service interface, ser
 ![Class diagram](./images/class_diagram.jpg)
 
 ## Server routes table(Method, Route or URL, Description as columns)
+Log in - http://localhost:8080/api/login
 
-## Resources
+For the GET and PUT routes it is necessary to have a body.
+
+**Admin Role**
+| Model                    | Save (POST)                                                  | Add Role (POST)                           | Get (GET)                               | Update (PUT)                            | Delete (DELETE)                         | Receive money (PATCH)                                                                        | Transfer money (PATCH)                                                                    |
+|--------------------------|--------------------------------------------------------------|-------------------------------------------|-----------------------------------------|-----------------------------------------|-----------------------------------------|----------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| Account Holder           | http://localhost:8080/api/holder/save                        | http://localhost:8080/api/roles/addtouser | http://localhost:8080/api/holder/{id}   | http://localhost:8080/api/holder/{id}   | http://localhost:8080/api/holder/{id}   |                                                                                              |                                                                                           |
+| Admin                    | http://localhost:8080/api/admin/save                         | http://localhost:8080/api/roles/addtouser | http://localhost:8080/api/admin/{id}    | http://localhost:8080/api/admin/{id}    | http://localhost:8080/api/admin/{id}    |                                                                                              |                                                                                           |
+| Third Party              | http://localhost:8080/api/third/save                         |                                           | http://localhost:8080/api/third/{id}    | http://localhost:8080/api/third/{id}    | http://localhost:8080/api/third/{id}    | http://localhost:8080/api/third/receive/{hashedKey}/{idAccountReceiver}/{amount}/{secretKey} | http://localhost:8080/api/third/transfer/{hashedKey}/{idAccountSend}/{amount}/{secretKey} |
+| Checking Account         | http://localhost:8080/api/checking/save                      |                                           | http://localhost:8080/api/checking/{id} | http://localhost:8080/api/checking/{id} | http://localhost:8080/api/checking/{id} |                                                                                              |                                                                                           |
+| Credit Card Account      | http://localhost:8080/api/credit/save                        |                                           | http://localhost:8080/api/credit/{id}   | http://localhost:8080/api/credit/{id}   | http://localhost:8080/api/credit/{id}   |                                                                                              |                                                                                           |
+| Savings Account          | http://localhost:8080/api/savings/save                       |                                           | http://localhost:8080/api/savings/{id}  | http://localhost:8080/api/savings/{id}  | http://localhost:8080/api/savings/{id}  |                                                                                              |                                                                                           |
+| Student Checking Account | http://localhost:8080/api/holder/save (user is less than 24) |                                           | http://localhost:8080/api/student/{id}  | http://localhost:8080/api/student/{id}  | http://localhost:8080/api/student/{id}  |                                                                                              |                                                                                           |
+
+**Account Holder Role**
+| Model                    | Get Balance (GET)                                          | Update Balance (PATCH)                                 | Transfer money (PATCH)                                                          |
+|--------------------------|------------------------------------------------------------|--------------------------------------------------------|---------------------------------------------------------------------------------|
+| Checking Account         | http://localhost:8080/api/checking/{id}/balance/{username} | http://localhost:8080/api/checking/{user}/{id}/balance | http://localhost:8080/api/checking/transfer/{user}/{idAccountReceiver}/{amount} |
+| Credit Card Account      | http://localhost:8080/api/credit/{id}/balance/{username}   | http://localhost:8080/api/credit/{user}/{id}/balance   | http://localhost:8080/api/credit/transfer/{user}/{idAccountReceiver}/{amount}   |
+| Savings Account          | http://localhost:8080/api/savings/{id}/balance/{username}  | http://localhost:8080/api/savings/{user}/{id}/balance  | http://localhost:8080/api/savings/transfer/{user}/{idAccountReceiver}/{amount}  |
+| Student Checking Account | http://localhost:8080/api/student/{id}/balance/{username}  | http://localhost:8080/api/student/{user}/{id}/balance  | http://localhost:8080/api/student/transfer/{user}/{idAccountReceiver}/{amount}  |
+
+
 Link to the trello board: https://trello.com/invite/b/ECshhmrn/13454943e678d9b4ae9df7ab2e1d2168/midterm-project
 
 A project by Núria Mafé
