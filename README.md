@@ -37,7 +37,7 @@ For every model it was created the respective repository, service interface, ser
 
 ![Class diagram](./images/class_diagram.jpg)
 
-## Server routes table(Method, Route or URL, Description as columns)
+## Server routes table
 Log in - http://localhost:8080/api/login
 
 For the GET and PUT routes it is necessary to have a body.
