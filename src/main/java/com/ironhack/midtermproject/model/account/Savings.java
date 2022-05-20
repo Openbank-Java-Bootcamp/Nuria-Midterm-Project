@@ -54,12 +54,12 @@ public class Savings extends Account {
     }
 
     // Constructor for testing interest rate
-    public Savings(Long secretKey, Money balance, User primaryOwner, Money minimumBalanceSavings, BigDecimal interestRateSavings, LocalDate interestAddedDat) {
+    public Savings(Long secretKey, Money balance, User primaryOwner, Money minimumBalanceSavings, BigDecimal interestRateSavings, LocalDate interestAddedDate) {
         super(secretKey, balance, primaryOwner);
         this.minimumBalanceSavings = minimumBalanceSavings;
         this.interestRateSavings = interestRateSavings;
         this.statusSavings = Status.ACTIVE;
-        this.interestAddedDate = interestAddedDat;
+        this.interestAddedDate = interestAddedDate;
         this.firstTimeAdded = false;
     }
 

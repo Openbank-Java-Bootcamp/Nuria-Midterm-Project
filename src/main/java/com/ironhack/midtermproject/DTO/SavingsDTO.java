@@ -17,4 +17,12 @@ public class SavingsDTO {
     private Long secondaryOwner;
     private Money minimumBalanceSavings;
     private BigDecimal interestRateSavings;
+
+    public SavingsDTO(Long secretKey, Money balance, Long primaryOwner, Money minimumBalanceSavings, BigDecimal interestRateSavings) {
+        this.secretKey = secretKey;
+        this.balance = balance;
+        this.primaryOwner = primaryOwner;
+        this.minimumBalanceSavings = minimumBalanceSavings;
+        this.interestRateSavings = interestRateSavings;
+    }
 }

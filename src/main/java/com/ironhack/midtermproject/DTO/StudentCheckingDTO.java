@@ -13,4 +13,10 @@ public class StudentCheckingDTO {
     private Money balance;
     private Long primaryOwner;
     private Long secondaryOwner;
+
+    public StudentCheckingDTO(Long secretKey, Money balance, Long primaryOwner) {
+        this.secretKey = secretKey;
+        this.balance = balance;
+        this.primaryOwner = primaryOwner;
+    }
 }

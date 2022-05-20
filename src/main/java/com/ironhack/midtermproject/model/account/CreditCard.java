@@ -42,6 +42,22 @@ public class CreditCard extends Account {
     private static final BigDecimal LIMIT_CREDIT = new BigDecimal(100000);
     private static final BigDecimal LIMIT_INTEREST_RATE = new BigDecimal(0.1);
 
+    // Constructor for testing first time adding interest
+    public CreditCard(Long secretKey, LocalDate creationDate, Money balance, User primaryOwner, Money creditLimit, BigDecimal interestRateCredit) {
+        super(secretKey, creationDate, balance, primaryOwner);
+        this.creditLimit = creditLimit;
+        this.interestRateCredit = interestRateCredit;
+    }
+
+    // Constructor for testing interest rate
+    public CreditCard(Long secretKey, Money balance, User primaryOwner, Money creditLimit, BigDecimal interestRateCredit, LocalDate interestAddedDate) {
+        super(secretKey, balance, primaryOwner);
+        this.creditLimit = creditLimit;
+        this.interestRateCredit = interestRateCredit;
+        this.interestAddedDate = interestAddedDate;
+        this.firstTimeAdded = false;
+    }
+
     // Constructor with primary, secondary owners, and default values
     public CreditCard(Long secretKey, Money balance, User primaryOwner, User secondaryOwner) {
         super(secretKey, balance, primaryOwner, secondaryOwner);

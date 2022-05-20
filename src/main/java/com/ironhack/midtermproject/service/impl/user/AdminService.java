@@ -38,7 +38,7 @@ public class AdminService implements AdminServiceInterface {
         log.info("Updating admin user {}", id);
         Admin adminFromDB = adminRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin user not found"));
         admin.setId(adminFromDB.getId());
-        userService.saveUser(admin);
+        userService.updateUser(id, admin);
     }
 
     public void deleteAdmin(Long id) {

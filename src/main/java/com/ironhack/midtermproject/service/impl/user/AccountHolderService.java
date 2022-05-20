@@ -39,7 +39,7 @@ public class AccountHolderService implements AccountHolderServiceInterface {
         log.info("Updating account holder user {}", id);
         AccountHolder accountHolderFromDB = accountHolderRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account holder user not found"));
         accountHolder.setId(accountHolderFromDB.getId());
-        userService.saveUser(accountHolder);
+        userService.updateUser(id, accountHolder);
     }
 
     public void deleteAccountHolder(Long id) {

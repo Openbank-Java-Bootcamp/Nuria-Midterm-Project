@@ -17,4 +17,12 @@ public class CreditCardDTO {
     private Long secondaryOwner;
     private Money creditLimit;
     private BigDecimal interestRateCredit;
+
+    public CreditCardDTO(Long secretKey, Money balance, Long primaryOwner, Money creditLimit, BigDecimal interestRateCredit) {
+        this.secretKey = secretKey;
+        this.balance = balance;
+        this.primaryOwner = primaryOwner;
+        this.creditLimit = creditLimit;
+        this.interestRateCredit = interestRateCredit;
+    }
 }

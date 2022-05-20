@@ -9,4 +9,9 @@ public class RoleToUserDTO {
     private String username;
     @NotEmpty(message = "You must have a role name")
     private String roleName;
+
+    public RoleToUserDTO(String username, String roleName) {
+        this.username = username;
+        this.roleName = roleName;
+    }
 }
