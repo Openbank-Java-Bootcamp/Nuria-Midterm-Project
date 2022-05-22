@@ -65,6 +65,18 @@ Before creating an account, a user must have been previously created.
 | Savings Account          | http://localhost:8080/api/savings/{id}/balance/{username}  | http://localhost:8080/api/savings/{user}/{id}/balance  | http://localhost:8080/api/savings/transfer/{user}/{idAccountReceiver}/{amount}  |
 | Student Checking Account | http://localhost:8080/api/student/{id}/balance/{username}  | http://localhost:8080/api/student/{user}/{id}/balance  | http://localhost:8080/api/student/transfer/{user}/{idAccountReceiver}/{amount}  |
 
+## Resources
+To complete this project, Raymond and Shaun were very helpful.
+
+I also did some research on Google to usderstand which strategy was better to use in every case.
+
+https://thorben-janssen.com/complete-guide-inheritance-strategies-jpa-hibernate/#Table_per_Class
+
+https://www.baeldung.com/sha-256-hashing-java
+
+https://restfulapi.net/http-status-codes/
+
+## Trello
 
 Link to the trello board: https://trello.com/invite/b/ECshhmrn/13454943e678d9b4ae9df7ab2e1d2168/midterm-project
 
