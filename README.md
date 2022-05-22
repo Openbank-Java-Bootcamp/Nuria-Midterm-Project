@@ -42,7 +42,9 @@ For every model it was created the respective repository, service interface, ser
 ## Server routes table
 Log in - http://localhost:8080/api/login
 
-For the GET and PUT routes it is necessary to have a body.
+For the GET and PUT routes it is necessary to have a body with the porperties.
+
+Before creating an account, a user must have been previously created.
 
 ### Admin Role
 | Model                    | Save (POST)                                                  | Add Role (POST)                           | Get (GET)                               | Update (PUT)                            | Delete (DELETE)                         | Receive money (PATCH)                                                                        | Transfer money (PATCH)                                                                    |
